@@ -940,27 +940,23 @@ bool borrarListaFicheros(const string &listaFic)
 	return sinfallos;
 }
 
-//Suite a lanzar para medir el tiempo
+//Probar la tokenización de directorios
 int runSuiteTemporal()
 {
-	long double total =0;
-	long double aa;
+	string nomDirectorio ="prueba";
+	cout<<"Limpiando directorio "+nomDirectorio<<endl;
+	limpiarDirectorio(nomDirectorio);
+	cout<<"Directorio "+nomDirectorio+" limpiado"<<endl;
 
-	for(int j=0; j<IT_MEDIAS; j++)
-	{
-		aa=getcputime();
-		for(int i=0; i<IT_SUITE_TIEMPOS; i++)
-		{
-			testTiempos::testAcronimos();
-			testTiempos::testCompuestas();
-			testTiempos::testEmails();
-			testTiempos::testNumeros();
-			testTiempos::testURLs();
-		}
-
-		total += getcputime() - aa;
-	}
-	cout << "Ha tardado " << total/IT_MEDIAS << " segundos" << endl;
+	//Medir el tiempo de tokenización
+	long double aa = getcputime();
+	//Tokenizar directorio
+	Tokenizador tok(".,:;/-@(){}?|[]'=_\"><&#-\r\t",true,true);
+	cout <<"Iniciando tokenización del directorio "+nomDirectorio<<endl;
+	tok.TokenizarDirectorio(nomDirectorio);
+	cout<<"Directorio "+nomDirectorio+" tokenizado"<<endl;
+	//Tiempo de tokenización
+	cout << "Ha tardado " << getcputime() - aa << " segundos" << endl;
 
 	return 0;
 }
@@ -980,24 +976,9 @@ int runSuiteEspacio()
 	return 0;
 }
 
-//Método de prueba estándar
+//Método de prueba estándar y con tiempo
 int main()
 {
-    runSuite();
-    return 0;
-}
-
-//Probar la tokenización de directorios
-int main2()
-{
-	limpiarDirectorio("prueba");
-	Tokenizador tok(".,:;/-@(){}?|[]'=_\"><&#",true,true);
-	tok.TokenizarDirectorio("prueba");
-	return 0;
-}
-
-//Probar la tokenización vigilando el tiempo
-int mainTemporal(){
     runSuite();
     runSuiteTemporal();
     return 0;
