@@ -859,7 +859,7 @@ int runSuiteTemporal()
 	//Medir el tiempo de tokenización
 	long double aa = getcputime();
 	//Tokenizar directorio
-	Tokenizador tok(".,:;/-@(){}?|[]'=_\"><&#-\r\t",true,true);
+	Tokenizador tok(".,:;/-@*(){}?!|[]'=_\"><&#-\r\t",true,true);
 	cout <<"Iniciando tokenización del directorio "+nomDirectorio<<endl;
 	tok.TokenizarDirectorio(nomDirectorio);
 	cout<<"Directorio "+nomDirectorio+" tokenizado"<<endl;
