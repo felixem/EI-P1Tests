@@ -785,98 +785,6 @@ double getcputime(void)
 	return t;
 }
 
-//Palabras compuestas
-namespace testTiempos
-{
-void testCompuestas() {
-	Tokenizador a("-#", true, false);
-	list<string> tokens;
-
-	a.Tokenizar("MS-DOS p1 p2 UN-DOS-TRES", tokens);
-	a.Tokenizar("pal1 -MS-DOS p1 p2", tokens);
-	a.Tokenizar("pal1 MS-DOS#p3 p1 p2", tokens);
-	a.Tokenizar("pal1#MS-DOS#p3 p1 p2", tokens);
-
-	a.DelimitadoresPalabra("/ ");
-	a.Tokenizar("MS-DOS p1 p2", tokens);
-	a.Tokenizar("pal1 -MS-DOS p1 p2", tokens);
-	a.Tokenizar("pal1 MS-DOS#p3 p1 p2", tokens);
-	a.Tokenizar("pal1#MS-DOS#p3 p1 p2", tokens);
-}
-
-//Tests de url
-void testURLs()
-{
-	Tokenizador a(",", true, false);
-	list<string> tokens;
-	string s = "p0 http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es p1 p2";
-
-	a.Tokenizar(s, tokens);
-
-	a.DelimitadoresPalabra("/ ");
-	a.Tokenizar(s, tokens);
-
-	a.DelimitadoresPalabra("/ &");
-	a.Tokenizar(s, tokens);
-
-	a.DelimitadoresPalabra("/&");
-	s = "p0 hhttp://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013 p1 p2";
-	a.Tokenizar(s, tokens);
-}
-
-//Test emails
-void testEmails()
-{
-	Tokenizador a(",", true, false);
-	list<string> tokens;
-
-	a.DelimitadoresPalabra("@.&");
-	a.Tokenizar("catedraTelefonicaUA@iuii.ua.es p1 p2", tokens);
-	a.Tokenizar("pal1 @iuii.ua.es p1 p2", tokens);
-	a.Tokenizar("pal1 cat@iuii.ua.es@cd p1 p2", tokens);
-
-	a.DelimitadoresPalabra("&.");
-	a.Tokenizar("catedraTelefonicaUA@iuii.ua.es p1 p2", tokens);
-	a.Tokenizar("pal1 @iuii.ua.es p1 p2", tokens);
-
-	a.Tokenizar("pal1&@iuii.ua.es p1 p2", tokens);
-	a.Tokenizar("pal1&catedra@iuii.ua.es p1 p2", tokens);
-	a.Tokenizar("pal1 cat@iuii.ua.es@cd p1 p2", tokens);
-}
-
-//Test acrónimos
-void testAcronimos()
-{
-	Tokenizador a(",", true, false);
-	list<string> tokens;
-
-	a.DelimitadoresPalabra("@.&");
-	a.Tokenizar("U.S.A p1 e.g. p2. La", tokens);
-
-	a.DelimitadoresPalabra("");
-	a.Tokenizar("U.S.A .U.S.A .p1 p1 e.g. p2. La", tokens);
-	a.Tokenizar("a&U.S.A p1 e.g. p2. La", tokens);
-
-	a.DelimitadoresPalabra("&");
-	a.Tokenizar("a&U.S.A p1 e.g. p2. La", tokens);
-}
-
-//Test números
-void testNumeros()
-{
-	Tokenizador a(",", true, false);
-	list<string> tokens;
-
-	a.DelimitadoresPalabra("@.,&");
-	a.Tokenizar("pal1 10.000,34 10,000.34 10.000.123.456.789.009,34 10,000,123,456,789,009.34 20.03 40,03 2005 10. 20, 10.0 20,0 La 20,12.456,7.8.9,", tokens);
-	a.Tokenizar(".34 ,56", tokens);
-	a.Tokenizar("pal1 10.35% 10,35% 23.000,3% 23€ 23.05€ 23,05€ 11$ 11.05$ 3º 4ª", tokens);
-	a.Tokenizar("pal1 10.00a 10.000.a.000 10/12/85 1,23E+10", tokens);
-	a.Tokenizar("pal1&10.00@10.000&000@10/12/85", tokens);
-	a.Tokenizar(".34@@&,56", tokens);
-}
-}
-
 //Limpiar el directorio de los ficheros .tk generados en ejecuciones anteriores
 bool limpiarDirectorio(const string &dirAIndexar)
 {
@@ -961,33 +869,11 @@ int runSuiteTemporal()
 	return 0;
 }
 
-//Suite a lanzar pasando el valgrind
-int runSuiteEspacio()
-{
-	for(int i=0; i<IT_SUITE_TIEMPOS; i++)
-	{
-		testTiempos::testAcronimos();
-		testTiempos::testCompuestas();
-		testTiempos::testEmails();
-		testTiempos::testNumeros();
-		testTiempos::testURLs();
-	}
-
-	return 0;
-}
-
-//Método de prueba estándar y con tiempo
+//Método de prueba estándar y con tiempo (Pasar el valgrind para el consumo de memoria)
 int main()
 {
     runSuite();
     runSuiteTemporal();
-    return 0;
-}
-
-//Probar la tokenización vigilando el espacio
-int mainEspacial(){
-    runSuite();
-	runSuiteEspacio();
     return 0;
 }
 
