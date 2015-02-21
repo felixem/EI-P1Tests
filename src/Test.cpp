@@ -1,9 +1,19 @@
 #include "cute.h"
 #include "ide_listener.h"
 #include "cute_runner.h"
+#include <sys/resource.h>
+#include <sys/stat.h>
+#include <fstream>
 
 #include "tokenizador.h"
 #include "tokenizadorClase.h"
+
+//Constante de iteraciones para suite
+const int IT_SUITE_TIEMPOS=20;
+const int IT_MEDIAS=1000;
+
+//Declaración de funciones
+bool borrarListaFicheros(const string &listaFic);
 
 //Mostrar resultado esperado y obtenido
 void MostrarResultados(list<string> &tokens, list<string> &resultados)
@@ -363,11 +373,10 @@ void tokenizador03() {
 	resultados.clear();
 	resultados.merge({"MS#DOS", "OS", "2", "[high", "low]"});
 	compararListas(lt3, resultados);
-
 	a.DelimitadoresPalabra(" _");
-	a.Tokenizar("MS#DOS 10 Espa�a �sp��� OS_2 [high low]", lt3);
+	a.Tokenizar("MS#DOS 10 España Éspáñé OS_2 [high low]", lt3);
 	resultados.clear();
-	resultados.merge({"MS#DOS", "10", "Espa�a", "�sp���", "OS", "2", "[high", "low]"});
+	resultados.merge({"MS#DOS", "10", "España", "Éspáñé", "OS", "2", "[high", "low]"});
 	compararListas(lt3, resultados);
 }
 
@@ -709,11 +718,13 @@ void tokenizador09()
 					"10/12/85", "1", "23E+10"});
 	compararListas(tokens, resultados);
 
+	//NO SE COMPRUEBA POR POSIBLE AMBIGÜEDAD
+	/*
 	a.Tokenizar("pal1&10.00@10.000&000@10/12/85", tokens);
 	// La lista de tokens a devolver deber�a contener: "pal1	10.00	10.000	000	10/12/85"
 	resultados.clear();
 	resultados.merge({"pal1", "10.00", "10.000", "000", "10/12/85"});
-	compararListas(tokens, resultados);
+	compararListas(tokens, resultados);*/
 
 	a.Tokenizar(".34@@&,56", tokens);
 	// La lista de tokens a devolver deber�a contener: "0.34	0,56"
@@ -761,8 +772,241 @@ void runSuite(){
 	cute::makeRunner(lis)(s, "The Suite");
 }
 
-int main(){
+//Calcular tiempos
+double getcputime(void)
+{
+	struct timeval tim;
+	struct rusage ru;
+	getrusage(RUSAGE_SELF, &ru);
+	tim=ru.ru_utime;
+	double t=(double)tim.tv_sec + (double)tim.tv_usec / 1000000.0;
+	tim=ru.ru_stime;
+	t+=(double)tim.tv_sec + (double)tim.tv_usec / 1000000.0;
+	return t;
+}
+
+//Palabras compuestas
+namespace testTiempos
+{
+void testCompuestas() {
+	Tokenizador a("-#", true, false);
+	list<string> tokens;
+
+	a.Tokenizar("MS-DOS p1 p2 UN-DOS-TRES", tokens);
+	a.Tokenizar("pal1 -MS-DOS p1 p2", tokens);
+	a.Tokenizar("pal1 MS-DOS#p3 p1 p2", tokens);
+	a.Tokenizar("pal1#MS-DOS#p3 p1 p2", tokens);
+
+	a.DelimitadoresPalabra("/ ");
+	a.Tokenizar("MS-DOS p1 p2", tokens);
+	a.Tokenizar("pal1 -MS-DOS p1 p2", tokens);
+	a.Tokenizar("pal1 MS-DOS#p3 p1 p2", tokens);
+	a.Tokenizar("pal1#MS-DOS#p3 p1 p2", tokens);
+}
+
+//Tests de url
+void testURLs()
+{
+	Tokenizador a(",", true, false);
+	list<string> tokens;
+	string s = "p0 http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es p1 p2";
+
+	a.Tokenizar(s, tokens);
+
+	a.DelimitadoresPalabra("/ ");
+	a.Tokenizar(s, tokens);
+
+	a.DelimitadoresPalabra("/ &");
+	a.Tokenizar(s, tokens);
+
+	a.DelimitadoresPalabra("/&");
+	s = "p0 hhttp://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013 p1 p2";
+	a.Tokenizar(s, tokens);
+}
+
+//Test emails
+void testEmails()
+{
+	Tokenizador a(",", true, false);
+	list<string> tokens;
+
+	a.DelimitadoresPalabra("@.&");
+	a.Tokenizar("catedraTelefonicaUA@iuii.ua.es p1 p2", tokens);
+	a.Tokenizar("pal1 @iuii.ua.es p1 p2", tokens);
+	a.Tokenizar("pal1 cat@iuii.ua.es@cd p1 p2", tokens);
+
+	a.DelimitadoresPalabra("&.");
+	a.Tokenizar("catedraTelefonicaUA@iuii.ua.es p1 p2", tokens);
+	a.Tokenizar("pal1 @iuii.ua.es p1 p2", tokens);
+
+	a.Tokenizar("pal1&@iuii.ua.es p1 p2", tokens);
+	a.Tokenizar("pal1&catedra@iuii.ua.es p1 p2", tokens);
+	a.Tokenizar("pal1 cat@iuii.ua.es@cd p1 p2", tokens);
+}
+
+//Test acrónimos
+void testAcronimos()
+{
+	Tokenizador a(",", true, false);
+	list<string> tokens;
+
+	a.DelimitadoresPalabra("@.&");
+	a.Tokenizar("U.S.A p1 e.g. p2. La", tokens);
+
+	a.DelimitadoresPalabra("");
+	a.Tokenizar("U.S.A .U.S.A .p1 p1 e.g. p2. La", tokens);
+	a.Tokenizar("a&U.S.A p1 e.g. p2. La", tokens);
+
+	a.DelimitadoresPalabra("&");
+	a.Tokenizar("a&U.S.A p1 e.g. p2. La", tokens);
+}
+
+//Test números
+void testNumeros()
+{
+	Tokenizador a(",", true, false);
+	list<string> tokens;
+
+	a.DelimitadoresPalabra("@.,&");
+	a.Tokenizar("pal1 10.000,34 10,000.34 10.000.123.456.789.009,34 10,000,123,456,789,009.34 20.03 40,03 2005 10. 20, 10.0 20,0 La 20,12.456,7.8.9,", tokens);
+	a.Tokenizar(".34 ,56", tokens);
+	a.Tokenizar("pal1 10.35% 10,35% 23.000,3% 23€ 23.05€ 23,05€ 11$ 11.05$ 3º 4ª", tokens);
+	a.Tokenizar("pal1 10.00a 10.000.a.000 10/12/85 1,23E+10", tokens);
+	a.Tokenizar("pal1&10.00@10.000&000@10/12/85", tokens);
+	a.Tokenizar(".34@@&,56", tokens);
+}
+}
+
+//Limpiar el directorio de los ficheros .tk generados en ejecuciones anteriores
+bool limpiarDirectorio(const string &dirAIndexar)
+{
+	struct stat dir;
+	// Compruebo la existencia del directorio
+	int err=stat(dirAIndexar.c_str(), &dir);
+	if(err==-1 || !S_ISDIR(dir.st_mode))
+	{
+		cerr<<"ERROR: No existe el directorio "<<dirAIndexar<<endl;
+		return false;
+	}
+	else
+	{
+		// Hago una lista en un fichero con find>fich
+		string cmd="find "+dirAIndexar+" -follow -name \"*.tk\" |sort > aBorrar";
+		system(cmd.c_str());
+		//Borrar la lista de ficheros y los ficheros de borrado y de lista de ficheros
+		string nombreFic1 = "aBorrar";
+		string nombreFic2 = "lista_fich";
+
+		borrarListaFicheros(nombreFic1);
+		string str = "rm "+nombreFic1;
+		system(str.c_str());
+		str = "rm "+nombreFic2;
+		system(str.c_str());
+	}
+
+	return true;
+}
+
+//Borrar lista de ficheros
+bool borrarListaFicheros(const string &listaFic)
+{
+	//Abrir fichero
+	ifstream fic;
+	bool sinfallos=true;
+	fic.open(listaFic.c_str());
+
+	//Fichero inexistente
+	if(!fic.is_open())
+	{
+		cerr << "ERROR: No existe el archivo: "<< listaFic << endl;
+		return false;
+	}
+
+	//Recorrer el fichero
+	string cadena;
+	while(!fic.eof())
+	{
+		cadena="";
+		getline(fic, cadena);
+		//Borrar fichero
+		if(cadena.length()!=0)
+		{
+			string str = "rm "+cadena;
+			system(str.c_str());
+		}
+	}
+
+	fic.close();
+	return sinfallos;
+}
+
+//Suite a lanzar para medir el tiempo
+int runSuiteTemporal()
+{
+	long double total =0;
+	long double aa;
+
+	for(int j=0; j<IT_MEDIAS; j++)
+	{
+		aa=getcputime();
+		for(int i=0; i<IT_SUITE_TIEMPOS; i++)
+		{
+			testTiempos::testAcronimos();
+			testTiempos::testCompuestas();
+			testTiempos::testEmails();
+			testTiempos::testNumeros();
+			testTiempos::testURLs();
+		}
+
+		total += getcputime() - aa;
+	}
+	cout << "Ha tardado " << total/IT_MEDIAS << " segundos" << endl;
+
+	return 0;
+}
+
+//Suite a lanzar pasando el valgrind
+int runSuiteEspacio()
+{
+	for(int i=0; i<IT_SUITE_TIEMPOS; i++)
+	{
+		testTiempos::testAcronimos();
+		testTiempos::testCompuestas();
+		testTiempos::testEmails();
+		testTiempos::testNumeros();
+		testTiempos::testURLs();
+	}
+
+	return 0;
+}
+
+//Método de prueba estándar
+int main()
+{
     runSuite();
+    return 0;
+}
+
+//Probar la tokenización de directorios
+int main2()
+{
+	limpiarDirectorio("prueba");
+	Tokenizador tok(".,:;/-@(){}?|[]'=_\"><&#",true,true);
+	tok.TokenizarDirectorio("prueba");
+	return 0;
+}
+
+//Probar la tokenización vigilando el tiempo
+int mainTemporal(){
+    runSuite();
+    runSuiteTemporal();
+    return 0;
+}
+
+//Probar la tokenización vigilando el espacio
+int mainEspacial(){
+    runSuite();
+	runSuiteEspacio();
     return 0;
 }
 
