@@ -785,13 +785,48 @@ double getcputime(void)
 	return t;
 }
 
-//Limpiar el directorio de los ficheros con la extensión deseada
-bool limpiarDirectorio(const string &dirAIndexar, const string &ext)
+//Borrar fichero según su ruta
+void borrarFichero(const string &nombreFic)
+{
+	//Borrar ficheros auxiliares
+	string str = "rm "+nombreFic;
+	system(str.c_str());
+}
+
+//Comprobar si la entrada se corresponde con un directorio
+bool esDirectorio(const string &directorio)
 {
 	struct stat dir;
 	// Compruebo la existencia del directorio
-	int err=stat(dirAIndexar.c_str(), &dir);
+	int err=stat(directorio.c_str(), &dir);
 	if(err==-1 || !S_ISDIR(dir.st_mode))
+		return false;
+	else
+		return true;
+}
+
+//Volcar la indexación de un directorio en un fichero según un filtro de extensión de archivos
+bool indexarDirectorioPorExtension(const string &directorio, const string &extension, const string &nomArchivo)
+{
+	//Comprobar si es un directorio
+	if(!esDirectorio(directorio))
+	{
+		cerr<<"ERROR: No existe el directorio "<<directorio<<endl;
+		return false;
+	}
+	else
+	{
+		string cmd="find "+directorio+" -follow -name \"*."+extension+"\" |sort > "+nomArchivo;
+		system(cmd.c_str());
+		return true;
+	}
+}
+
+//Limpiar el directorio de los ficheros con la extensión deseada
+bool limpiarDirectorio(const string &dirAIndexar, const string &ext)
+{
+	//Comprobar si es un directorio
+	if(!esDirectorio(dirAIndexar))
 	{
 		cerr<<"ERROR: No existe el directorio "<<dirAIndexar<<endl;
 		return false;
@@ -799,17 +834,12 @@ bool limpiarDirectorio(const string &dirAIndexar, const string &ext)
 	else
 	{
 		string nombreFic = "borrar_"+ext;
-
 		// Hago una lista de ficheros a borrar con find>fich
-		string cmd="find "+dirAIndexar+" -follow -name \"*."+ext+"\" |sort > "+nombreFic;
-		system(cmd.c_str());
-
+		indexarDirectorioPorExtension(dirAIndexar,ext,nombreFic);
 		//Borrar la lista de ficheros que se generan en cada ejecución
 		borrarListaFicheros(nombreFic);
-
 		//Borrar ficheros auxiliares
-		string str = "rm "+nombreFic;
-		system(str.c_str());
+		borrarFichero(nombreFic);
 	}
 
 	return true;
@@ -838,10 +868,7 @@ bool borrarListaFicheros(const string &listaFic)
 		getline(fic, cadena);
 		//Borrar fichero
 		if(cadena.length()!=0)
-		{
-			string str = "rm "+cadena;
-			system(str.c_str());
-		}
+			borrarFichero(cadena);
 	}
 
 	fic.close();
@@ -857,6 +884,13 @@ string quitarPrimerDirectorio(const string &ruta)
 		return ruta;
 	else
 		return ruta.substr(pos+1);
+}
+
+//Comparar un fichero con otro y volcar la salida sobre otro fichero
+void compararFicheros(const string &fic1, const string &fic2, const string &ficSalida)
+{
+	string str = "diff "+fic1+" "+fic2+" >> "+ficSalida;
+	system(str.c_str());
 }
 
 //Borrar lista de ficheros
@@ -890,9 +924,9 @@ bool compararListaFicheros(const string &resultado, const string &esperado)
 	string rutaRes;
 	string rutaEsp;
 	bool sinfallos=true;
-
 	int i=0;
 
+	//Comparar todos los ficheros
 	while(!esp.eof() && !res.eof())
 	{
 		cadenaRes="";
@@ -916,14 +950,10 @@ bool compararListaFicheros(const string &resultado, const string &esperado)
 				"Se esperaba "<<rutaEsp<<" pero se obtuvo "<<rutaRes<<endl;
 				sinfallos=false;
 			}
+			//Comparar ficheros
 			else
-			{
-				stringstream ss;
-				ss<<"diff "<<cadenaRes<<" "<<cadenaEsp<<" >> diferencias/"<<rutaEsp<<".diff";
-				system(ss.str().c_str());
-			}
+				compararFicheros(cadenaRes,cadenaEsp,"diferencias/"+rutaEsp+".diff");
 		}
-
 		i++;
 	}
 
@@ -950,83 +980,183 @@ bool compararSalidas(const string &dirEntrada,const string &dirSalida)
 {
 	string ficResultados="resultado";
 	string ficSalidaEsperada="salida_esperada";
+	indexarDirectorioPorExtension(dirEntrada,"tk",ficResultados);
+	indexarDirectorioPorExtension(dirSalida,"tk",ficSalidaEsperada);
 
-	string cmd="find "+dirEntrada+" -follow -name \"*.tk\" |sort > "+ficResultados;
-	system(cmd.c_str());
-	cmd="find "+dirSalida+" -follow -name \"*.tk\" |sort > "+ficSalidaEsperada;
-	system(cmd.c_str());
 	return compararListaFicheros(ficResultados,ficSalidaEsperada);
 }
 
-//Limpiar ficheros de lista de ficheros
-void limpiarFicherosLista()
+//Borrar directorio completo
+bool borrarDirectorio(const string &directorio)
 {
-	//Borrar los ficheros de lista de ficheros generados en cada ejecucion
-	string nombreFic2 = "lista_fich";
-	string nombreFic3 = "resultado";
-	string nombreFic4 = "salida_esperada";
-	//Borrar
-	string str = "rm "+nombreFic2;
-	system(str.c_str());
-	str = "rm "+nombreFic3;
-	system(str.c_str());
-	str = "rm "+nombreFic4;
-	system(str.c_str());
+	//Comprobar si es un directorio
+	if(!esDirectorio(directorio))
+	{
+		cerr<<"ERROR: No existe el directorio "<<directorio<<endl;
+		return false;
+	}
+	else
+	{
+		//Borrar directorio
+		string cmd ="rm -r "+directorio;
+		system(cmd.c_str());
+		return true;
+	}
 }
 
-//Probar la tokenización de directorios
-int runSuiteTemporal()
+//Calcar la estructura de directorios del origen al destino sin incluir los archivos contenidos
+bool calcarEstructuraDirectorios(const string &origen, const string &destino)
 {
-	string directorioPruebas ="prueba";
-	string directorioComparaciones ="diferencias";
-	string directorioSalida ="salida";
+	//Comprobar si es un directorio
+	if(!esDirectorio(origen))
+	{
+		cerr<<"ERROR: No existe el directorio "<<origen<<endl;
+		return false;
+	}
+	else
+	{
+		//Copiar estructura de directorio con la salida
+		//rsync -r --max-size=1 salida/* diferencias
+		string cmd =  "rsync -r --max-size=1 "+origen+"/* "+destino;
+		system(cmd.c_str());
+		return true;
+	}
+}
 
-	//Limpiar temporales
-	cout<<"Limpiando ficheros de lista"<<endl;
-	limpiarFicherosLista();
-	cout<<"Ficheros de lista eliminados"<<endl;
+//Copiar los ficheros de una extension dentro de un directorio a otro directorio respectando la jerarquía de directorios interna
+bool copiarArchivosExtension(const string& origen, const string&ext, const string&destino)
+{
+	//Comprobar si es un directorio
+	if(!esDirectorio(origen))
+	{
+		cerr<<"ERROR: No existe el directorio "<<origen<<endl;
+		return false;
+	}
+	else
+	{
+		//Copiar todos los ficheros que tengan la extensión de entrada dentro del directorio origen
+		//rsync -rv --include '*/' --include '*.tk' --exclude '*' --prune-empty-dirs prueba/* salidaReal
+		string cmd =  "rsync -r --include '*/' --include '*."+ext+"' --exclude '*' --prune-empty-dirs "+origen+"/* "+destino;
+		system(cmd.c_str());
+		return true;
+	}
+}
+
+//Limpiar ficheros de lista de ficheros
+void limpiarArchivosTemporales(const string& directorioPruebas, const string& directorioSalida,
+		const string& directorioComparaciones, const string& directorioCopia)
+{
+	cout<<endl;
+	cout<<"Limpiando archivos temporales"<<endl;
+	//Borrar los ficheros de lista de ficheros generados en cada ejecucion
+	borrarFichero("lista_fich");
+	borrarFichero("resultado");
+	borrarFichero("salida_esperada");
 
 	//Limpiar extensiones de ficheros temporales de los directorios
 	cout<<"Limpiando directorio "+directorioPruebas<<endl;
 	limpiarDirectorio(directorioPruebas,"tk");
-	cout<<"Directorio "+directorioPruebas+" limpiado"<<endl;
 
 	//Truncar el directorio de diferencias completo
-	cout<<"Borrando el directorio "+directorioComparaciones<<endl;
+	cout<<"Borrando directorio "+directorioComparaciones<<endl;
 	//Borrar directorio
-	string cmd ="rm -r "+directorioComparaciones;
-	system(cmd.c_str());
+	borrarDirectorio(directorioComparaciones);
 	//Copiar estructura de directorio con la salida
-	//rsync -v -r --max-size=1 salida/* diferencias
-	cmd =  "rsync -v -r --max-size=1 "+directorioSalida+"/* "+directorioComparaciones;
-	system(cmd.c_str());
-	cout<<"Directorio "+directorioComparaciones+" limpiado"<<endl;
+	if(calcarEstructuraDirectorios(directorioSalida,directorioComparaciones))
+		cout<<"Directorio "+directorioComparaciones+" generado"<<endl;
+	else
+		cerr<<"No se pudo regenerar el directorio"<<endl;
+
+	//Borrar el directorio de copia
+	cout<<"Borrando directorio "+directorioCopia<<endl;
+	//Borrar directorio
+	borrarDirectorio(directorioCopia);
+
+}
+
+//Método para testear la tokenización de directorios
+double testDirectorio(const Tokenizador &tok, const string& directorioPruebas, const string& directorioSalida)
+{
+	double tiempoActual;
+	if(tok.TokenizarDirectorio(directorioPruebas))
+	{
+		tiempoActual = getcputime();
+		if(!compararSalidas(directorioPruebas,directorioSalida))
+			cerr<<"Hubo problemas en la comparación de los ficheros generados"<<endl;
+	}
+	else
+	{
+		cerr<<"Hubo problemas graves en la tokenización del directorio"<<endl;
+		return getcputime();
+	}
+
+	return tiempoActual;
+}
+
+//Probar la tokenización de directorios
+int runSuiteTemporal(const string& directorioPruebas, const string& directorioSalida, const string& directorioCopia)
+{
+	string directorioComparaciones ="diferencias";
+
+	//Limpiar temporales
+	limpiarArchivosTemporales(directorioPruebas,directorioSalida,directorioComparaciones,directorioCopia);
+
+	//Tokenización de directorio
+	cout <<"------------------------------------------------"<<endl;
+	cout <<"Iniciando tokenización del directorio "+directorioPruebas<<endl;
 
 	//Medir el tiempo de tokenización
+	long double tiempo;
 	long double aa = getcputime();
 	//Tokenizar directorio
 	Tokenizador tok(".,:;/-@*(){}?!|[]'=_\"><&#-\r\t",true,true);
-	cout <<"Iniciando tokenización del directorio "+directorioPruebas<<endl;
-	tok.TokenizarDirectorio(directorioPruebas);
-	cout<<"Directorio "+directorioPruebas+" tokenizado"<<endl;
-	//Tiempo de tokenización
-	cout << "Ha tardado " << getcputime() - aa << " segundos" << endl;
+	tiempo=testDirectorio(tok,directorioPruebas,directorioSalida);
+	//Mostrar resultado temporal
+	cout << "Ha tardado " << tiempo - aa << " segundos en tokenizar el directorio" << endl;
 
-	//Comparar las salidas de los directorios
-	cout<<"Comparando la salida real con la salida esperada"<<endl;
-	if(compararSalidas(directorioPruebas,directorioSalida))
-		cout<<"Se ha generado correctamente la comparación"<<endl;
-	else
-		cout<<"Hubo problemas en la comparación de los ficheros"<<endl;
+	//Hacer una copia de los ficheros .tk generados a otra carpeta para poder usarla como referencia en próximas ejecuciones
+	if(copiarArchivosExtension(directorioPruebas,"tk",directorioCopia))
+		cout<<"Generada copia de la salida de la tokenización en "<<directorioCopia<<endl;
 
 	return 0;
 }
 
 //Método de prueba estándar y con tiempo (Pasar el valgrind para el consumo de memoria)
-int main()
+int main(int argc, char** argv)
 {
+	//Pruebas de tokenización individual
     runSuite();
-    runSuiteTemporal();
+
+    //Tokenización de directorios
+	string directorioPruebas ="prueba";
+	string directorioSalida ="salida";
+	string directorioCopia="salida_real";
+
+	//Comprobación de parámetros
+	if(argc > 4)
+	{
+		cerr<<"ERROR: Número de parámetros inválido"<<endl;
+		cout<<"USO: "<<argv[0]<<" [directorioEntrada] [directorioReferencia] [directorioCopia] "<<endl;
+		return -1;
+	}
+	//Argumentos de directorio introducidos
+	else if(argc > 1)
+	{
+		//Directorio de entrada
+		directorioPruebas =argv[1];
+		if(argc > 2)
+		{
+			//Directorio de referencia
+			directorioSalida =argv[2];
+			if(argc == 4)
+				//Directorio de copia
+				directorioCopia=argv[3];
+		}
+	}
+
+	//Lanzar la suite te tokenización de directorios
+    runSuiteTemporal(directorioPruebas, directorioSalida, directorioCopia);
+
     return 0;
 }
 
