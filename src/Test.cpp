@@ -1023,6 +1023,13 @@ bool calcarEstructuraDirectorios(const string &origen, const string &destino)
 	}
 }
 
+void borrarArchivosExtension(const string& directorio, const string& ext)
+{
+	//find prueba -follow -name \"*.tk" | xargs rm -rf
+	string cmd="find "+directorio+" -follow -name \"*."+ext+"\" | xargs rm -rf";
+	system(cmd.c_str());
+}
+
 //Copiar los ficheros de una extension dentro de un directorio a otro directorio respectando la jerarquía de directorios interna
 bool copiarArchivosExtension(const string& origen, const string&ext, const string&destino)
 {
@@ -1038,6 +1045,8 @@ bool copiarArchivosExtension(const string& origen, const string&ext, const strin
 		//rsync -rv --include '*/' --include '*.tk' --exclude '*' --prune-empty-dirs prueba/* salidaReal
 		string cmd =  "rsync -r --include '*/' --include '*."+ext+"' --exclude '*' --prune-empty-dirs "+origen+"/* "+destino;
 		system(cmd.c_str());
+		//Eliminar los ficheros de la extension en el directorio origen
+		borrarArchivosExtension(origen,ext);
 		return true;
 	}
 }
@@ -1048,10 +1057,11 @@ void limpiarArchivosTemporales(const string& directorioPruebas, const string& di
 {
 	cout<<endl;
 	cout<<"Limpiando archivos temporales"<<endl;
-	//Borrar los ficheros de lista de ficheros generados en cada ejecucion
+	//Borrar los ficheros temporales generados en cada ejecucion
 	borrarFichero("lista_fich");
 	borrarFichero("resultado");
 	borrarFichero("salida_esperada");
+	borrarFichero("reporte_tokenizacion");
 
 	//Limpiar extensiones de ficheros temporales de los directorios
 	cout<<"Limpiando directorio "+directorioPruebas<<endl;
@@ -1093,6 +1103,92 @@ double testDirectorio(const Tokenizador &tok, const string& directorioPruebas, c
 	return tiempoActual;
 }
 
+//Saber si un fichero está vacío
+bool esFicheroVacio(const string &fichero)
+{
+	struct stat dat;
+
+	//Comprobar si se puede abrir el fichero
+	if(stat(fichero.c_str(),&dat) == -1) {
+		cerr<<"ERROR: no se pudo abrir el fichero "<<fichero<<endl;
+		return true;
+	}
+
+	//Comprobar la cantidad de bytes
+	if(dat.st_size == 0)
+		return true;
+	else
+		return false;
+}
+
+//Escribir en el informe los ficheros que no estén vacíos
+bool reportarNoVacios(const string &listado, const string &nomSalida)
+{
+	ifstream ficEntrada;
+	ofstream ficSalida;
+	bool sinfallos=true;
+
+	//Abrir listado de ficheros
+	ficEntrada.open(listado.c_str());
+	//Comprobar la apertura del listado
+	if(ficEntrada.is_open())
+	{
+		ficSalida.open(nomSalida.c_str());
+		//Comprobar creación del archivo de reporte
+		if(ficSalida.is_open())
+		{
+			//Añadir un título dentro del reporte
+			ficSalida<<"Listado de ficheros de diferencia que reportan errores de tokenización:";
+
+			//Recorrer el fichero mientras no se llegue al final
+			while(!ficEntrada.eof())
+			{
+				string cadena="";
+				getline(ficEntrada,cadena);
+
+				//Comprobar que se ha leído algo
+				if(cadena.length()!=0)
+				{
+					//Añadir en el reporte los ficheros no vacíos
+					if(!esFicheroVacio(cadena))
+						ficSalida<<endl<<cadena;
+				}
+			}
+		}
+		//Error en el fichero de salida
+		else
+		{
+			cerr<<"ERROR: No se pudo generar el fichero "<<listado<<endl;
+			sinfallos=false;
+		}
+	}
+	else
+	{
+		cerr<<"ERROR: No se pudo abrir el fichero "<<listado<<endl;
+		sinfallos=false;
+	}
+
+	ficEntrada.close();
+	ficSalida.close();
+
+	return sinfallos;
+}
+
+//Genera un informe sobre los ficheros de diferencias situados en el directorio de entrada
+bool generarInforme(const string &directorio,const string& reporte)
+{
+	string listado ="listado_diferencias";
+
+	//Generar un listado con todos los archivos diff
+	indexarDirectorioPorExtension(directorio,"diff",listado);
+	//Generar el reporte de diferencias
+	bool sinfallos=reportarNoVacios(listado,reporte);
+	//Eliminar el fichero temporal de listado de diferencias
+	borrarFichero(listado);
+
+	return sinfallos;
+}
+
 //Probar la tokenización de directorios
 int runSuiteTemporal(const string& directorioPruebas, const string& directorioSalida, const string& directorioCopia)
 {
@@ -1116,7 +1212,12 @@ int runSuiteTemporal(const string& directorioPruebas, const string& directorioSa
 
 	//Hacer una copia de los ficheros .tk generados a otra carpeta para poder usarla como referencia en próximas ejecuciones
 	if(copiarArchivosExtension(directorioPruebas,"tk",directorioCopia))
-		cout<<"Generada copia de la salida de la tokenización en "<<directorioCopia<<endl;
+		cout<<"Salida de la tokenización movida desde "<<directorioPruebas<<" hacia "<<directorioCopia<<endl;
+
+	//Generar un fichero de resumen sobre las diferencias entre la salida esperada y la generada por la tokenización
+	string reporte ="reporte_tokenizacion";
+	if(generarInforme(directorioComparaciones,reporte))
+		cout<<"Informe de comparaciones generado en "<<reporte<<endl;
 
 	return 0;
 }
