@@ -1,1 +1,10 @@
-*.tk
+boost
+cute
+Debug
+.cproject
+.project
+.settings/
+lista_fich
+resultado
+salida_esperada
+diferencias/

@@ -785,8 +785,8 @@ double getcputime(void)
 	return t;
 }
 
-//Limpiar el directorio de los ficheros .tk generados en ejecuciones anteriores
-bool limpiarDirectorio(const string &dirAIndexar)
+//Limpiar el directorio de los ficheros con la extensión deseada
+bool limpiarDirectorio(const string &dirAIndexar, const string &ext)
 {
 	struct stat dir;
 	// Compruebo la existencia del directorio
@@ -798,17 +798,17 @@ bool limpiarDirectorio(const string &dirAIndexar)
 	}
 	else
 	{
-		// Hago una lista en un fichero con find>fich
-		string cmd="find "+dirAIndexar+" -follow -name \"*.tk\" |sort > aBorrar";
-		system(cmd.c_str());
-		//Borrar la lista de ficheros y los ficheros de borrado y de lista de ficheros
-		string nombreFic1 = "aBorrar";
-		string nombreFic2 = "lista_fich";
+		string nombreFic = "borrar_"+ext;
 
-		borrarListaFicheros(nombreFic1);
-		string str = "rm "+nombreFic1;
-		system(str.c_str());
-		str = "rm "+nombreFic2;
+		// Hago una lista de ficheros a borrar con find>fich
+		string cmd="find "+dirAIndexar+" -follow -name \"*."+ext+"\" |sort > "+nombreFic;
+		system(cmd.c_str());
+
+		//Borrar la lista de ficheros que se generan en cada ejecución
+		borrarListaFicheros(nombreFic);
+
+		//Borrar ficheros auxiliares
+		string str = "rm "+nombreFic;
 		system(str.c_str());
 	}
 
@@ -848,23 +848,176 @@ bool borrarListaFicheros(const string &listaFic)
 	return sinfallos;
 }
 
+//Quitar el primer directorio de la ruta
+string quitarPrimerDirectorio(const string &ruta)
+{
+	string::size_type pos = ruta.find('/');
+
+	if(pos == string::npos || pos == ruta.length()-1)
+		return ruta;
+	else
+		return ruta.substr(pos+1);
+}
+
+//Borrar lista de ficheros
+bool compararListaFicheros(const string &resultado, const string &esperado)
+{
+	//Abrir fichero
+	ifstream res,esp;
+	res.open(resultado.c_str());
+
+	//Fichero inexistente
+	if(!res.is_open())
+	{
+		cerr << "ERROR: No existe el archivo: "<< resultado << endl;
+		return false;
+	}
+
+	//Abrir segundo fichero
+	esp.open(esperado.c_str());
+
+	//Fichero inexistente
+	if(!esp.is_open())
+	{
+		cerr << "ERROR: No existe el archivo: "<< esperado << endl;
+		res.close();
+		return false;
+	}
+
+	//Recorrer el fichero
+	string cadenaRes;
+	string cadenaEsp;
+	string rutaRes;
+	string rutaEsp;
+	bool sinfallos=true;
+
+	int i=0;
+
+	while(!esp.eof() && !res.eof())
+	{
+		cadenaRes="";
+		cadenaEsp="";
+
+		//Leer línea
+		getline(res, cadenaRes);
+		getline(esp, cadenaEsp);
+
+		//Comparar ficheros
+		if(cadenaRes.length()!=0 && cadenaEsp.length()!=0)
+		{
+			//Comparar la ruta de los archivos sin su directorio raiz
+			rutaRes=quitarPrimerDirectorio(cadenaRes);
+			rutaEsp=quitarPrimerDirectorio(cadenaEsp);
+
+			//Error en la comparación de rutas
+			if(rutaRes != rutaEsp)
+			{
+				cerr<<"ERROR: El directorio de los ficheros a comparar no coincide."<<
+				"Se esperaba "<<rutaEsp<<" pero se obtuvo "<<rutaRes<<endl;
+				sinfallos=false;
+			}
+			else
+			{
+				stringstream ss;
+				ss<<"diff "<<cadenaRes<<" "<<cadenaEsp<<" >> diferencias/"<<rutaEsp<<".diff";
+				system(ss.str().c_str());
+			}
+		}
+
+		i++;
+	}
+
+	//Mala generación en la tokenización de ficheros
+	if(!res.eof())
+	{
+		cerr<<"El número de ficheros resultado es mayor del esperado"<<endl;
+		sinfallos=false;
+	}
+	else if(!esp.eof())
+	{
+		cerr<<"El número de ficheros resultado es menor del esperado"<<endl;
+		sinfallos=false;
+	}
+
+	//Cerrar ficheros
+	esp.close();
+	res.close();
+	return sinfallos;
+}
+
+//Comparar salidas de los ficheros de salida
+bool compararSalidas(const string &dirEntrada,const string &dirSalida)
+{
+	string ficResultados="resultado";
+	string ficSalidaEsperada="salida_esperada";
+
+	string cmd="find "+dirEntrada+" -follow -name \"*.tk\" |sort > "+ficResultados;
+	system(cmd.c_str());
+	cmd="find "+dirSalida+" -follow -name \"*.tk\" |sort > "+ficSalidaEsperada;
+	system(cmd.c_str());
+	return compararListaFicheros(ficResultados,ficSalidaEsperada);
+}
+
+//Limpiar ficheros de lista de ficheros
+void limpiarFicherosLista()
+{
+	//Borrar los ficheros de lista de ficheros generados en cada ejecucion
+	string nombreFic2 = "lista_fich";
+	string nombreFic3 = "resultado";
+	string nombreFic4 = "salida_esperada";
+	//Borrar
+	string str = "rm "+nombreFic2;
+	system(str.c_str());
+	str = "rm "+nombreFic3;
+	system(str.c_str());
+	str = "rm "+nombreFic4;
+	system(str.c_str());
+}
+
 //Probar la tokenización de directorios
 int runSuiteTemporal()
 {
-	string nomDirectorio ="prueba";
-	cout<<"Limpiando directorio "+nomDirectorio<<endl;
-	limpiarDirectorio(nomDirectorio);
-	cout<<"Directorio "+nomDirectorio+" limpiado"<<endl;
+	string directorioPruebas ="prueba";
+	string directorioComparaciones ="diferencias";
+	string directorioSalida ="salida";
+
+	//Limpiar temporales
+	cout<<"Limpiando ficheros de lista"<<endl;
+	limpiarFicherosLista();
+	cout<<"Ficheros de lista eliminados"<<endl;
+
+	//Limpiar extensiones de ficheros temporales de los directorios
+	cout<<"Limpiando directorio "+directorioPruebas<<endl;
+	limpiarDirectorio(directorioPruebas,"tk");
+	cout<<"Directorio "+directorioPruebas+" limpiado"<<endl;
+
+	//Truncar el directorio de diferencias completo
+	cout<<"Borrando el directorio "+directorioComparaciones<<endl;
+	//Borrar directorio
+	string cmd ="rm -r "+directorioComparaciones;
+	system(cmd.c_str());
+	//Copiar estructura de directorio con la salida
+	//rsync -v -r --max-size=1 salida/* diferencias
+	cmd =  "rsync -v -r --max-size=1 "+directorioSalida+"/* "+directorioComparaciones;
+	system(cmd.c_str());
+	cout<<"Directorio "+directorioComparaciones+" limpiado"<<endl;
 
 	//Medir el tiempo de tokenización
 	long double aa = getcputime();
 	//Tokenizar directorio
 	Tokenizador tok(".,:;/-@*(){}?!|[]'=_\"><&#-\r\t",true,true);
-	cout <<"Iniciando tokenización del directorio "+nomDirectorio<<endl;
-	tok.TokenizarDirectorio(nomDirectorio);
-	cout<<"Directorio "+nomDirectorio+" tokenizado"<<endl;
+	cout <<"Iniciando tokenización del directorio "+directorioPruebas<<endl;
+	tok.TokenizarDirectorio(directorioPruebas);
+	cout<<"Directorio "+directorioPruebas+" tokenizado"<<endl;
 	//Tiempo de tokenización
 	cout << "Ha tardado " << getcputime() - aa << " segundos" << endl;
+
+	//Comparar las salidas de los directorios
+	cout<<"Comparando la salida real con la salida esperada"<<endl;
+	if(compararSalidas(directorioPruebas,directorioSalida))
+		cout<<"Se ha generado correctamente la comparación"<<endl;
+	else
+		cout<<"Hubo problemas en la comparación de los ficheros"<<endl;
 
 	return 0;
 }
