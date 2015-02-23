@@ -3,6 +3,8 @@ Repositorio para pruebas unitarias de la práctica 1 de EI
 
 INSTRUCCIONES PARA LA COMPILACIÓN
 
+Copiar los .h y .cpp en las carpetas include y lib de la raiz del proyecto.
+
 Ejecutar desde el directorio Compile del proyecto:
 
 make
