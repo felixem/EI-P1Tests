@@ -7,4 +7,8 @@ Debug
 lista_fich
 resultado
 salida_esperada
+reporte_tokenizacion
+.lista_fich
+salida_ejecucion/
 diferencias/
+salida_real/
