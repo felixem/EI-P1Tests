@@ -12,3 +12,5 @@ reporte_tokenizacion
 salida_ejecucion/
 diferencias/
 salida_real/
+lib/
+include/
