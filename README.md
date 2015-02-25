@@ -1,6 +1,18 @@
 # EI-P1Tests
 Repositorio para pruebas unitarias de la práctica 1 de EI
 
+AVISO IMPORTANTE: TODOS LOS FICHEROS FUENTE Y DE PRUEBAS DE ESTA PRÁCTICA DEBERÁN ESTAR CODIFICADOS EN ISO-8859-1 O ISO-8859-15
+
+Para más información, consúltense los siguientes enlaces:
+
+http://stackoverflow.com/questions/64860/best-way-to-convert-text-files-between-character-sets
+
+http://es.wikipedia.org/wiki/ISO_8859-15
+
+http://es.wikipedia.org/wiki/ISO_8859-1
+
+http://es.wikipedia.org/wiki/UTF-8
+
 INSTRUCCIONES PARA LA COMPILACIÓN
 
 Copiar los .h y .cpp en las carpetas include y lib de la raiz del proyecto.

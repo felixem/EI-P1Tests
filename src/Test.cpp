@@ -1,4 +1,4 @@
-/*Copyright (c) 2015 "F√©lix Escalona Monchol√≠"
+/*Copyright (c) 2015 "FÈlix Escalona MoncholÌ"
 Unit tests for class Tokenizador
 
 This file is part of https://github.com/felixem/EI-P1Tests.
@@ -39,7 +39,7 @@ const char* DIRECTORIO_DIFERENCIAS="diferencias";
 const char* EXTENSION_TOKEN="tk";
 const char* EXTENSION_DIFERENCIAS="diff";
 
-//Declaraci√≥n de funciones
+//DeclaraciÛn de funciones
 bool borrarListaFicheros(const string &listaFic);
 
 //Mostrar resultado esperado y obtenido
@@ -61,7 +61,7 @@ void MostrarResultados(list<string> &tokens, list<string> &resultados)
 //Comparar listas
 void compararListas(list<string> &tokens, list<string> &resultados)
 {
-	//Igualdad de tama√±os
+	//Igualdad de tamaÒos
 	if(resultados.size() != tokens.size())
 		//Mostrar resultados esperados
 		MostrarResultados(tokens,resultados);
@@ -88,49 +88,49 @@ void testCompuestas() {
 	list<string> resultados;
 
 	a.Tokenizar("MS-DOS p1 p2 UN-DOS-TRES", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "MS-DOS, p1, p2, UN-DOS-TRES"
+	// La lista de tokens a devolver deberÌa contener: "MS-DOS, p1, p2, UN-DOS-TRES"
 	resultados.merge({"MS-DOS","p1","p2","UN-DOS-TRES"});
 	compararListas(tokens, resultados);
 
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1, MS-DOS, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, MS-DOS, p1, p2"
 	a.Tokenizar("pal1 -MS-DOS p1 p2", tokens);
 	resultados.clear();
 	resultados.merge({"pal1","MS-DOS","p1","p2"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1 MS-DOS#p3 p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1, MS-DOS, p3, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, MS-DOS, p3, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1","MS-DOS","p3","p1","p2"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1#MS-DOS#p3 p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1, MS-DOS, p3, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, MS-DOS, p3, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1","MS-DOS","p3","p1","p2"});
 	compararListas(tokens, resultados);
 
 	a.DelimitadoresPalabra("/ ");
 	a.Tokenizar("MS-DOS p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "MS-DOS, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "MS-DOS, p1, p2"
 	resultados.clear();
 	resultados.merge({"MS-DOS","p1","p2"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1 -MS-DOS p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1, -MS-DOS, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, -MS-DOS, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1","-MS-DOS","p1","p2"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1 MS-DOS#p3 p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1, MS-DOS#p3, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, MS-DOS#p3, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1","MS-DOS#p3","p1","p2"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1#MS-DOS#p3 p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1#MS-DOS#p3, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1#MS-DOS#p3, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1#MS-DOS#p3","p1","p2"});
 	compararListas(tokens, resultados);
@@ -144,7 +144,7 @@ void testURLs()
 	string s = "p0 http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es p1 p2";
 
 	a.Tokenizar(s, tokens);
-	// La lista de tokens a devolver deber√≠a contener: " p0, http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: " p0, http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es, p1, p2"
 	resultados.clear();
 	resultados.merge({"p0",
 		"http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es",
@@ -153,18 +153,18 @@ void testURLs()
 
 	a.DelimitadoresPalabra("/ ");
 	a.Tokenizar(s, tokens);
-	// La lista de tokens a devolver deber√≠a contener: " p0, http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: " p0, http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es, p1, p2"
 	compararListas(tokens, resultados);
 
 	a.DelimitadoresPalabra("/ &");
 	a.Tokenizar(s, tokens);
-	// La lista de tokens a devolver deber√≠a contener: " p0, http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: " p0, http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es, p1, p2"
 	compararListas(tokens, resultados);
 
 	a.DelimitadoresPalabra("/&");
 	s = "p0 hhttp://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013 p1 p2";
 	a.Tokenizar(s, tokens);
-	// La lista de tokens a devolver deber√≠a contener: " p0, hhttp:,intime.dlsi.ua.es:8080, dossierct, index.jsp?lang=es, status=probable, date=22-01-2013, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: " p0, hhttp:,intime.dlsi.ua.es:8080, dossierct, index.jsp?lang=es, status=probable, date=22-01-2013, p1, p2"
 	resultados.clear();
 	resultados.merge({"p0","hhttp:", "intime.dlsi.ua.es:8080", "dossierct", "index.jsp?lang=es", "status=probable",
 		"date=22-01-2013", "p1", "p2"});
@@ -179,57 +179,57 @@ void testEmails()
 
 	a.DelimitadoresPalabra("@.&");
 	a.Tokenizar("catedraTelefonicaUA@iuii.ua.es p1 p2", tokens);
-	// La lista de tokens a devolver deber√≠a contener:	"catedraTelefonicaUA@iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener:	"catedraTelefonicaUA@iuii.ua.es, p1, p2"
 	resultados.clear();
 	resultados.merge({"catedraTelefonicaUA@iuii.ua.es","p1", "p2"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1 @iuii.ua.es p1 p2", tokens);
-	// La lista de tokens a devolver deber√≠a contener: "pal1, iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, iuii.ua.es, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1","iuii.ua.es", "p1", "p2"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1 cat@iuii.ua.es@cd p1 p2", tokens);
-	// La lista de tokens a devolver deber√≠a contener: "pal1, cat, iuii.ua.es@cd, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, cat, iuii.ua.es@cd, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1","cat", "iuii.ua.es@cd", "p1", "p2"});
 	compararListas(tokens, resultados);
 
 	a.DelimitadoresPalabra("&.");
 	a.Tokenizar("catedraTelefonicaUA@iuii.ua.es p1 p2", tokens);
-	// La lista de tokens a devolver deber√≠a contener: "catedraTelefonicaUA@iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "catedraTelefonicaUA@iuii.ua.es, p1, p2"
 	resultados.clear();
 	resultados.merge({"catedraTelefonicaUA@iuii.ua.es","p1", "p2"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1 @iuii.ua.es p1 p2", tokens);
-	// La lista de tokens a devolver deber√≠a contener: "pal1, @iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, @iuii.ua.es, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1","@iuii.ua.es", "p1", "p2"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1&@iuii.ua.es p1 p2", tokens);
-	// La lista de tokens a devolver deber√≠a contener: "pal1, @iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, @iuii.ua.es, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1","@iuii.ua.es", "p1", "p2"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1&catedra@iuii.ua.es p1 p2", tokens);
-	// La lista de tokens a devolver deber√≠a contener: "pal1, catedra@iuii.ua.es,	p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, catedra@iuii.ua.es,	p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1","catedra@iuii.ua.es", "p1", "p2"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1 cat@iuii.ua.es@cd p1 p2", tokens);
-	// La lista de tokens a devolver deber√≠a contener: "pal1, cat@iuii.ua.es@cd,	p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, cat@iuii.ua.es@cd,	p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1","cat@iuii.ua.es@cd", "p1", "p2"});
 	compararListas(tokens, resultados);
 
 }
 
-//Test acr√≥nimos
+//Test acrÛnimos
 void testAcronimos()
 {
 	Tokenizador a(",", true, false);
@@ -237,33 +237,33 @@ void testAcronimos()
 
 	a.DelimitadoresPalabra("@.&");
 	a.Tokenizar("U.S.A p1 e.g. p2. La", tokens);
-	// La lista de tokens a devolver deber√≠a contener: "U.S.A, p1, e.g, p2, La"
+	// La lista de tokens a devolver deberÌa contener: "U.S.A, p1, e.g, p2, La"
 	resultados.clear();
 	resultados.merge({"U.S.A","p1", "e.g", "p2", "La"});
 	compararListas(tokens, resultados);
 
 	a.DelimitadoresPalabra("");
 	a.Tokenizar("U.S.A .U.S.A .p1 p1 e.g. p2. La", tokens);
-	// La lista de tokens a devolver deber√≠a contener: "U.S.A, U.S.A, .p1, p1, e.g, p2., La"
+	// La lista de tokens a devolver deberÌa contener: "U.S.A, U.S.A, .p1, p1, e.g, p2., La"
 	resultados.clear();
 	resultados.merge({"U.S.A","U.S.A",".p1","p1", "e.g", "p2.", "La"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("a&U.S.A p1 e.g. p2. La", tokens);
-	// La lista de tokens a devolver deber√≠a contener: "a&U.S.A, p1, e.g, p2., La"
+	// La lista de tokens a devolver deberÌa contener: "a&U.S.A, p1, e.g, p2., La"
 	resultados.clear();
 	resultados.merge({"a&U.S.A","p1", "e.g", "p2.", "La"});
 	compararListas(tokens, resultados);
 
 	a.DelimitadoresPalabra("&");
 	a.Tokenizar("a&U.S.A p1 e.g. p2. La", tokens);
-	// La lista de tokens a devolver deber√≠a contener: "a, U.S.A, p1, e.g, p2.,	La"
+	// La lista de tokens a devolver deberÌa contener: "a, U.S.A, p1, e.g, p2.,	La"
 	resultados.clear();
 	resultados.merge({"a", "U.S.A","p1", "e.g", "p2.", "La"});
 	compararListas(tokens, resultados);
 }
 
-//Test n√∫meros
+//Test n˙meros
 void testNumeros()
 {
 	Tokenizador a(",", true, false);
@@ -271,7 +271,7 @@ void testNumeros()
 
 	a.DelimitadoresPalabra("@.,&");
 	a.Tokenizar("pal1 10.000,34 10,000.34 10.000.123.456.789.009,34 10,000,123,456,789,009.34 20.03 40,03 2005 10. 20, 10.0 20,0 La 20,12.456,7.8.9,", tokens);
-	// La lista de tokens a devolver deber√≠a contener: "pal1 10.000,34 10,000.34 10.000.123.456.789.009,34 10,000,123,456,789,009.34 20.03
+	// La lista de tokens a devolver deberÌa contener: "pal1 10.000,34 10,000.34 10.000.123.456.789.009,34 10,000,123,456,789,009.34 20.03
 	// 40,03 2005 10 20 10.0 20,0 La 20,12.456,7.8.9"
 	resultados.clear();
 	resultados.merge({"pal1","10.000,34", "10,000.34", "10.000.123.456.789.009,34", "10,000,123,456,789,009.34", "20.03",
@@ -279,34 +279,34 @@ void testNumeros()
 	compararListas(tokens, resultados);
 
 	a.Tokenizar(".34 ,56", tokens);
-	// La lista de tokens a devolver deber√≠a contener: "0.34 0,56"
+	// La lista de tokens a devolver deberÌa contener: "0.34 0,56"
 	resultados.clear();
 	resultados.merge({"0.34","0,56"});
 	compararListas(tokens, resultados);
 
-	a.Tokenizar("pal1 10.35% 10,35% 23.000,3% 23‚Ç¨ 23.05‚Ç¨ 23,05‚Ç¨ 11$ 11.05$ 3¬∫ 4¬™", tokens);
-	// La lista de tokens a devolver deber√≠a contener: "pal1 10.35 % 10,35 % 23.000,3 %	23 ‚Ç¨ 23.05 ‚Ç¨ 23,05 ‚Ç¨ 11	$
-	// 11.05 $ 3 ¬∫ 4 ¬™"
+	a.Tokenizar("pal1 10.35% 10,35% 23.000,3% 23§ 23.05§ 23,05§ 11$ 11.05$ 3∫ 4™", tokens);
+	// La lista de tokens a devolver deberÌa contener: "pal1 10.35 % 10,35 % 23.000,3 %	23 § 23.05 § 23,05 § 11	$
+	// 11.05 $ 3 ∫ 4 ™"
 	resultados.clear();
-	resultados.merge({"pal1","10.35", "%", "10,35", "%", "23.000,3","%", "23", "‚Ç¨", "23.05", "‚Ç¨",
-		"23,05", "‚Ç¨", "11", "$", "11.05", "$", "3", "¬∫", "4", "¬™"});
+	resultados.merge({"pal1","10.35", "%", "10,35", "%", "23.000,3","%", "23", "§", "23.05", "§",
+		"23,05", "§", "11", "$", "11.05", "$", "3", "∫", "4", "™"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1 10.00a 10.000.a.000 10/12/85 1,23E+10", tokens);
-	// La lista de tokens a devolver deber√≠a contener: "pal1 10.00a 10.000.a.000 10/12/85 1	23E+10"
+	// La lista de tokens a devolver deberÌa contener: "pal1 10.00a 10.000.a.000 10/12/85 1	23E+10"
 	resultados.clear();
 	resultados.merge({"pal1","10.00a", "10.000.a.000", "10/12/85", "1", "23E+10"});
 	compararListas(tokens, resultados);
 
-	/* PRUEBA INVALIDADA POR POSIBLE AMBIG√úEDAD ENTRE EMAIL Y N√öMERO
+	/* PRUEBA INVALIDADA POR POSIBLE AMBIG‹EDAD ENTRE EMAIL Y N⁄MERO
 	a.Tokenizar("pal1&10.00@10.000&000@10/12/85", tokens);
-	// La lista de tokens a devolver deber√≠a contener: "pal1 10.00 10.000 000 10/12/85"
+	// La lista de tokens a devolver deberÌa contener: "pal1 10.00 10.000 000 10/12/85"
 	resultados.clear();
 	resultados.merge({"pal1","10.00","10.000","000", "10/12/85"});
 	compararListas(tokens, resultados);*/
 
 	a.Tokenizar(".34@@&,56", tokens);
-	// La lista de tokens a devolver deber√≠a contener: "0.34 0,56"
+	// La lista de tokens a devolver deberÌa contener: "0.34 0,56"
 	resultados.clear();
 	resultados.merge({"0.34","0,56"});
 	compararListas(tokens, resultados);
@@ -402,9 +402,9 @@ void tokenizador03() {
 	resultados.merge({"MS#DOS", "OS", "2", "[high", "low]"});
 	compararListas(lt3, resultados);
 	a.DelimitadoresPalabra(" _");
-	a.Tokenizar("MS#DOS 10 Espa√±a √âsp√°√±√© OS_2 [high low]", lt3);
+	a.Tokenizar("MS#DOS 10 EspaÒa …sp·ÒÈ OS_2 [high low]", lt3);
 	resultados.clear();
-	resultados.merge({"MS#DOS", "10", "Espa√±a", "√âsp√°√±√©", "OS", "2", "[high", "low]"});
+	resultados.merge({"MS#DOS", "10", "EspaÒa", "…sp·ÒÈ", "OS", "2", "[high", "low]"});
 	compararListas(lt3, resultados);
 }
 
@@ -436,14 +436,14 @@ void tokenizador04() {
 	compararListas(lt3, resultados);
 
 	a.DelimitadoresPalabra(" _");
-	a.Tokenizar("MS#DOS 10 Espa√±a √âsp√°√±√© OS_2 [high low]", lt3);
+	a.Tokenizar("MS#DOS 10 EspaÒa …sp·ÒÈ OS_2 [high low]", lt3);
 	resultados.clear();
-	resultados.merge({"ms#dos", "10", "espa√±a", "espa√±e", "os", "2", "[high", "low]" });
+	resultados.merge({"ms#dos", "10", "espaÒa", "espaÒe", "os", "2", "[high", "low]" });
 	compararListas(lt3, resultados);
 
-	a.Tokenizar("√°√©√≠√≥√∫ √Å√â√ç√ì√ö √ë√± ", lt3);
+	a.Tokenizar("·ÈÌÛ˙ ¡…Õ”⁄ —Ò ", lt3);
 	resultados.clear();
-	resultados.merge({"aeiou", "aeiou", "√±√±"});
+	resultados.merge({"aeiou", "aeiou", "ÒÒ"});
 	compararListas(lt3, resultados);
 }
 
@@ -456,57 +456,57 @@ void tokenizador05()
 	list<string> tokens;
 
 	a.Tokenizar("MS-DOS p1 p2 UN-DOS-TRES", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "MS-DOS, p1, p2, UN-DOS-TRES"
+	// La lista de tokens a devolver deberÌa contener: "MS-DOS, p1, p2, UN-DOS-TRES"
 	resultados.clear();
 	resultados.merge({"MS-DOS", "p1", "p2", "UN-DOS-TRES" });
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1 -MS-DOS p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1, MS-DOS, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, MS-DOS, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1", "MS-DOS", "p1", "p2" });
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1 MS-DOS#p3 p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1, MS-DOS, p3, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, MS-DOS, p3, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1", "MS-DOS", "p3", "p1", "p2" });
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1#MS-DOS#p3 p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1, MS-DOS, p3, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, MS-DOS, p3, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1", "MS-DOS", "p3", "p1", "p2" });
 	compararListas(tokens, resultados);
 
 	a.DelimitadoresPalabra("/ ");
 	a.Tokenizar("MS-DOS p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "MS-DOS, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "MS-DOS, p1, p2"
 	resultados.clear();
 	resultados.merge({"MS-DOS", "p1", "p2"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1 -MS-DOS p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1, -MS-DOS, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, -MS-DOS, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1", "-MS-DOS", "p1", "p2" });
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1 MS-DOS#p3 p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1, MS-DOS#p3, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, MS-DOS#p3, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1", "MS-DOS#p3", "p1", "p2" });
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1#MS-DOS#p3 p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1#MS-DOS#p3, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1#MS-DOS#p3, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1#MS-DOS#p3", "p1", "p2"});
 	compararListas(tokens, resultados);
 
 	a.PasarAminuscSinAcentos(true);
 	a.Tokenizar("pal1#MS-DOSaA#p3 p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1#ms-dosaa#p3, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1#ms-dosaa#p3, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1#ms-dosaa#p3", "p1", "p2"});
 	compararListas(tokens, resultados);
@@ -514,7 +514,7 @@ void tokenizador05()
 	a.DelimitadoresPalabra("/-");
 	a.CasosEspeciales (false);
 	a.Tokenizar("pal1#MS-DOSaA#p3 p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1#ms, dosaa#p3 p1 p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1#ms, dosaa#p3 p1 p2"
 	resultados.clear();
 	resultados.merge({"pal1#ms", "dosaa#p3 p1 p2" });
 	compararListas(tokens, resultados);
@@ -530,7 +530,7 @@ void tokenizador06()
 	string s = "p0 http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es p1 p2";
 
 	a.Tokenizar(s, tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: " p0, http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: " p0, http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es, p1, p2"
 	resultados.clear();
 	resultados.merge({"p0", "http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es",
 						"p1","p2"});
@@ -538,7 +538,7 @@ void tokenizador06()
 
 	a.DelimitadoresPalabra("/ ");
 	a.Tokenizar(s, tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: " p0, http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: " p0, http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es, p1, p2"
 	resultados.clear();
 	resultados.merge({"p0", "http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es",
 						"p1","p2"});
@@ -546,7 +546,7 @@ void tokenizador06()
 
 	a.DelimitadoresPalabra("/ &");
 	a.Tokenizar(s, tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: " p0, http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: " p0, http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es, p1, p2"
 	resultados.clear();
 	resultados.merge({"p0", "http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es",
 						"p1","p2"});
@@ -556,7 +556,7 @@ void tokenizador06()
 	s = "p0 hhttp://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&DATE=22-01-2013 p1 p2";
 
 	a.Tokenizar(s, tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: " p0, hhttp:, intime.dlsi.ua.es:8080, dossierct, index.jsp?lang=es, status=probable, DATE=22-01-2013, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: " p0, hhttp:, intime.dlsi.ua.es:8080, dossierct, index.jsp?lang=es, status=probable, DATE=22-01-2013, p1, p2"
 	resultados.clear();
 	resultados.merge({"p0", "hhttp:", "intime.dlsi.ua.es:8080", "dossierct", "index.jsp?lang=es", "status=probable",
 						"DATE=22-01-2013","p1", "p2"});
@@ -564,7 +564,7 @@ void tokenizador06()
 
 	a.PasarAminuscSinAcentos(true);
 	a.Tokenizar(s, tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: " p0, hhttp:, intime.dlsi.ua.es:8080, dossierct, index.jsp?lang=es, status=probable, date=22-01-2013, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: " p0, hhttp:, intime.dlsi.ua.es:8080, dossierct, index.jsp?lang=es, status=probable, date=22-01-2013, p1, p2"
 	resultados.clear();
 	resultados.merge({"p0", "hhttp:", "intime.dlsi.ua.es:8080", "dossierct", "index.jsp?lang=es", "status=probable",
 						"date=22-01-2013","p1", "p2"});
@@ -572,7 +572,7 @@ void tokenizador06()
 
 	s = "p0 http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedraTelefonicaUA@iuii.ua.es p1 p2";
 	a.Tokenizar(s, tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: " p0, http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedratelefonicaua@iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: " p0, http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedratelefonicaua@iuii.ua.es, p1, p2"
 	resultados.clear();
 	resultados.merge({"p0", "http://intime.dlsi.ua.es:8080/dossierct/index.jsp?lang=es&status=probable&date=22-01-2013&newspaper=catedratelefonicaua@iuii.ua.es",
 						"p1","p2"});
@@ -581,7 +581,7 @@ void tokenizador06()
 	a.DelimitadoresPalabra("/&");
 	a.CasosEspeciales (false);
 	a.Tokenizar(s, tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: " p0 http:, intime.dlsi.ua.es:8080, dossierct, index.jsp?lang=es, status=probable, date=22-01-2013, newspaper=catedratelefonicaua@iuii.ua.es p1 p2"
+	// La lista de tokens a devolver deberÌa contener: " p0 http:, intime.dlsi.ua.es:8080, dossierct, index.jsp?lang=es, status=probable, date=22-01-2013, newspaper=catedratelefonicaua@iuii.ua.es p1 p2"
 	resultados.clear();
 	resultados.merge({"p0 http:", "intime.dlsi.ua.es:8080", "dossierct", "index.jsp?lang=es", "status=probable",
 						"date=22-01-2013","newspaper=catedratelefonicaua@iuii.ua.es p1 p2"});
@@ -597,55 +597,55 @@ void tokenizador07()
 
 	a.DelimitadoresPalabra("@.&");
 	a.Tokenizar("catedraTelefonicaUA@iuii.ua.es p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "catedraTelefonicaUA@iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "catedraTelefonicaUA@iuii.ua.es, p1, p2"
 	resultados.clear();
 	resultados.merge({"catedraTelefonicaUA@iuii.ua.es", "p1", "p2"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1 @iuii.ua.es p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1, iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, iuii.ua.es, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1","iuii.ua.es", "p1", "p2"});
 	compararListas(tokens, resultados);
 
 	// ELIMINADO POR POSIBLE AMBIGUEDAD DE QUE SE DETECTA PRIMERO ACRONIMO O EMAIL
 	//a.Tokenizar("pal1 cat@iuii.ua.es@cd p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1, cat, iuii.ua.es, cd, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, cat, iuii.ua.es, cd, p1, p2"
 	//	imprimirListaSTL(tokens);
 
 	a.DelimitadoresPalabra("&.");
 	a.Tokenizar("catedraTelefonicaUA@iuii.ua.es p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "catedraTelefonicaUA@iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "catedraTelefonicaUA@iuii.ua.es, p1, p2"
 	resultados.clear();
 	resultados.merge({"catedraTelefonicaUA@iuii.ua.es", "p1", "p2"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1 @iuii.ua.es p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1, @iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, @iuii.ua.es, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1","@iuii.ua.es", "p1", "p2"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1&@iuii.ua.es p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1, @iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, @iuii.ua.es, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1","@iuii.ua.es", "p1", "p2"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1&catedra@iuii.ua.es p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1, catedra@iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, catedra@iuii.ua.es, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1","catedra@iuii.ua.es", "p1", "p2"});
 	compararListas(tokens, resultados);
 
 	// ELIMINADO POR POSIBLE AMBIGUEDAD DE QUE SE DETECTA PRIMERO ACRONIMO O EMAIL
 	//a.Tokenizar("pal1 cat@iuii.ua.es@cd p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1, cat@iuii, ua, es@cd, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "pal1, cat@iuii, ua, es@cd, p1, p2"
 	//	imprimirListaSTL(tokens);
 
 	a.PasarAminuscSinAcentos(true);
 	a.Tokenizar("catedraTelefonicaUA@iuii.ua.es p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "catedratelefonicaua@iuii.ua.es, p1, p2"
+	// La lista de tokens a devolver deberÌa contener: "catedratelefonicaua@iuii.ua.es, p1, p2"
 	resultados.clear();
 	resultados.merge({"catedratelefonicaua@iuii.ua.es", "p1", "p2"});
 	compararListas(tokens, resultados);
@@ -653,7 +653,7 @@ void tokenizador07()
 	a.DelimitadoresPalabra("@.&");
 	a.CasosEspeciales (false);
 	a.Tokenizar("catedraTelefonicaUA@iuii.ua.es p1 p2", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "catedratelefonicaua, iuii, ua, es p1 p2"
+	// La lista de tokens a devolver deberÌa contener: "catedratelefonicaua, iuii, ua, es p1 p2"
 	resultados.clear();
 	resultados.merge({"catedratelefonicaua", "iuii", "ua","es p1 p2"});
 	compararListas(tokens, resultados);
@@ -668,34 +668,34 @@ void tokenizador08()
 
 	a.DelimitadoresPalabra("@.&");
 	a.Tokenizar("U.S.A p1 e.g. p2. La", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "U.S.A, p1, e.g, p2, La"
+	// La lista de tokens a devolver deberÌa contener: "U.S.A, p1, e.g, p2, La"
 	resultados.clear();
 	resultados.merge({"U.S.A", "p1", "e.g", "p2", "La"});
 	compararListas(tokens, resultados);
 
 	a.DelimitadoresPalabra("");
 	a.Tokenizar("U.S.A .U.S.A .p1 p1 e.g. p2. La", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "U.S.A, U.S.A, .p1, p1, e.g, p2., La"
+	// La lista de tokens a devolver deberÌa contener: "U.S.A, U.S.A, .p1, p1, e.g, p2., La"
 	resultados.clear();
 	resultados.merge({"U.S.A", "U.S.A", ".p1", "p1", "e.g", "p2.", "La"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("a&U.S.A p1 e.g. p2. La", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "a&U.S.A, p1, e.g, p2., La"
+	// La lista de tokens a devolver deberÌa contener: "a&U.S.A, p1, e.g, p2., La"
 	resultados.clear();
 	resultados.merge({"a&U.S.A", "p1", "e.g", "p2.", "La"});
 	compararListas(tokens, resultados);
 
 	a.DelimitadoresPalabra("&");
 	a.Tokenizar("a&U.S.A p1 e.g. p2. La", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "a, U.S.A, p1, e.g, p2., La"
+	// La lista de tokens a devolver deberÌa contener: "a, U.S.A, p1, e.g, p2., La"
 	resultados.clear();
 	resultados.merge({"a", "U.S.A", "p1", "e.g", "p2.", "La"});
 	compararListas(tokens, resultados);
 
 	a.PasarAminuscSinAcentos(true);
 	a.Tokenizar("a&U.S.A p1 e.g. p2. La", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "a, u.s.a, p1, e.g, p2., la"
+	// La lista de tokens a devolver deberÌa contener: "a, u.s.a, p1, e.g, p2., la"
 	resultados.clear();
 	resultados.merge({"a", "u.s.a", "p1", "e.g", "p2.", "la"});
 	compararListas(tokens, resultados);
@@ -703,7 +703,7 @@ void tokenizador08()
 	a.DelimitadoresPalabra(".&");
 	a.CasosEspeciales (false);
 	a.Tokenizar("a&U.S.A p1 e.g. p2. La", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "a, u, s, a p1 e, g,  p2,  la"
+	// La lista de tokens a devolver deberÌa contener: "a, u, s, a p1 e, g,  p2,  la"
 	resultados.clear();
 	resultados.merge({"a", "u", "s", "a p1 e", "g", " p2", " la"});
 	compararListas(tokens, resultados);
@@ -718,58 +718,58 @@ void tokenizador09()
 
 	a.DelimitadoresPalabra("@.,&");
 	a.Tokenizar("pal1 10.000,34 10,000.34 10.000.123.456.789.009,34 10,000,123,456,789,009.34 20.03 40,03 2005 10. 20, 10.0 20,0 La 20,12.456,7.8.9,", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1	10.000,34	10,000.34	10.000.123.456.789.009,34	10,000,123,456,789,009.34	20.03	40,03	2005	10	20	10.0	20,0	La	20,12.456,7.8.9"
+	// La lista de tokens a devolver deberÌa contener: "pal1	10.000,34	10,000.34	10.000.123.456.789.009,34	10,000,123,456,789,009.34	20.03	40,03	2005	10	20	10.0	20,0	La	20,12.456,7.8.9"
 	resultados.clear();
 	resultados.merge({"pal1", "10.000,34", "10,000.34", "10.000.123.456.789.009,34", "10,000,123,456,789,009.34", "20.03", "40,03",
 					"2005", "10", "20", "10.0", "20,0", "La", "20,12.456,7.8.9"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar(".34 ,56", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "0.34	0,56"
+	// La lista de tokens a devolver deberÌa contener: "0.34	0,56"
 	resultados.clear();
 	resultados.merge({"0.34","0,56"});
 	compararListas(tokens, resultados);
 
-	a.Tokenizar("pal1 10.35% 10,35% 23.000,3% 23‚Ç¨ 23.05‚Ç¨ 23,05‚Ç¨ 11$ 11.05$ 3¬∫ 4¬™", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1	10.35	%	10,35	%	23.000,3	%	23	‚Ç¨	23.05	‚Ç¨	23,05	‚Ç¨
-	//	11	$	11.05	$	3	¬∫	4	¬™"
+	a.Tokenizar("pal1 10.35% 10,35% 23.000,3% 23§ 23.05§ 23,05§ 11$ 11.05$ 3∫ 4™", tokens);
+	// La lista de tokens a devolver deberÌa contener: "pal1	10.35	%	10,35	%	23.000,3	%	23	§	23.05	§	23,05	§
+	//	11	$	11.05	$	3	∫	4	™"
 	resultados.clear();
 	resultados.merge({"pal1", "10.35", "%", "10,35", "%", "23.000,3", "%",
-					"23", "‚Ç¨", "23.05", "‚Ç¨", "23,05", "‚Ç¨", "11",
-					"$", "11.05","$","3","¬∫","4","¬™"});
+					"23", "§", "23.05", "§", "23,05", "§", "11",
+					"$", "11.05","$","3","∫","4","™"});
 	compararListas(tokens, resultados);
 
 	a.Tokenizar("pal1 10.00a 10.000.a.000 10/12/85 1,23E+10", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1	10.00a	10.000.a.000	10/12/85 1	23E+10	"
+	// La lista de tokens a devolver deberÌa contener: "pal1	10.00a	10.000.a.000	10/12/85 1	23E+10	"
 	resultados.clear();
 	resultados.merge({"pal1", "10.00a", "10.000.a.000",
 					"10/12/85", "1", "23E+10"});
 	compararListas(tokens, resultados);
 
-	//NO SE COMPRUEBA POR POSIBLE AMBIG√úEDAD
+	//NO SE COMPRUEBA POR POSIBLE AMBIG‹EDAD
 	/*
 	a.Tokenizar("pal1&10.00@10.000&000@10/12/85", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1	10.00	10.000	000	10/12/85"
+	// La lista de tokens a devolver deberÌa contener: "pal1	10.00	10.000	000	10/12/85"
 	resultados.clear();
 	resultados.merge({"pal1", "10.00", "10.000", "000", "10/12/85"});
 	compararListas(tokens, resultados);*/
 
 	a.Tokenizar(".34@@&,56", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "0.34	0,56"
+	// La lista de tokens a devolver deberÌa contener: "0.34	0,56"
 	resultados.clear();
 	resultados.merge({"0.34", "0,56"});
 	compararListas(tokens, resultados);
 
 	a.PasarAminuscSinAcentos(true);
 	a.Tokenizar("Pal1&10.00@10.000&000@10/12/85 La", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1	10.00	10.000	000	10/12/85	la"
+	// La lista de tokens a devolver deberÌa contener: "pal1	10.00	10.000	000	10/12/85	la"
 	resultados.clear();
 	resultados.merge({"pal1", "10.00", "10.000", "000", "10/12/85", "la"});
 	compararListas(tokens, resultados);
 
 	a.CasosEspeciales (false);
 	a.Tokenizar("Pal1&10.00@10.000&000@10/12/85 La", tokens);
-	// La lista de tokens a devolver deberÔøΩa contener: "pal1	10	00	10	000	000	10/12/85 la"
+	// La lista de tokens a devolver deberÌa contener: "pal1	10	00	10	000	000	10/12/85 la"
 	resultados.clear();
 	resultados.merge({"pal1", "10", "00", "10", "000", "000", "10/12/85 la"});
 	compararListas(tokens, resultados);
@@ -813,7 +813,7 @@ double getcputime(void)
 	return t;
 }
 
-//Borrar fichero seg√∫n su ruta
+//Borrar fichero seg˙n su ruta
 void borrarFichero(const string &nombreFic)
 {
 	struct stat dir;
@@ -839,7 +839,7 @@ bool esDirectorio(const string &directorio)
 		return true;
 }
 
-//Volcar la indexaci√≥n de un directorio en un fichero seg√∫n un filtro de extensi√≥n de archivos
+//Volcar la indexaciÛn de un directorio en un fichero seg˙n un filtro de extensiÛn de archivos
 bool indexarDirectorioPorExtension(const string &directorio, const string &extension, const string &nomArchivo)
 {
 	//Comprobar si es un directorio
@@ -850,13 +850,13 @@ bool indexarDirectorioPorExtension(const string &directorio, const string &exten
 	}
 	else
 	{
-		string cmd="find "+directorio+" -follow -name \"*."+extension+"\" |sort > "+nomArchivo;
+		string cmd="find "+directorio+" -type f -follow -name \"*."+extension+"\" |sort > "+nomArchivo;
 		system(cmd.c_str());
 		return true;
 	}
 }
 
-//Limpiar el directorio de los ficheros con la extensi√≥n deseada
+//Limpiar el directorio de los ficheros con la extensiÛn deseada
 bool limpiarDirectorio(const string &dirAIndexar, const string &ext)
 {
 	//Comprobar si es un directorio
@@ -870,7 +870,7 @@ bool limpiarDirectorio(const string &dirAIndexar, const string &ext)
 		string nombreFic = "borrar_"+ext;
 		// Hago una lista de ficheros a borrar con find>fich
 		indexarDirectorioPorExtension(dirAIndexar,ext,nombreFic);
-		//Borrar la lista de ficheros que se generan en cada ejecuci√≥n
+		//Borrar la lista de ficheros que se generan en cada ejecuciÛn
 		borrarListaFicheros(nombreFic);
 		//Borrar ficheros auxiliares
 		borrarFichero(nombreFic);
@@ -974,7 +974,7 @@ bool compararListaFicheros(const string &resultado, const string &esperado,
 		cadenaRes="";
 		cadenaEsp="";
 
-		//Leer l√≠nea
+		//Leer lÌnea
 		getline(res, cadenaRes);
 		getline(esp, cadenaEsp);
 
@@ -987,7 +987,7 @@ bool compararListaFicheros(const string &resultado, const string &esperado,
 			quitarDirectorioComienzo(rutaRes,dirEntrada);
 			quitarDirectorioComienzo(rutaEsp,dirSalida);
 
-			//Error en la comparaci√≥n de rutas
+			//Error en la comparaciÛn de rutas
 			if(rutaRes != rutaEsp)
 			{
 				cerr<<"ERROR: El directorio de los ficheros a comparar no coincide."<<
@@ -1005,15 +1005,15 @@ bool compararListaFicheros(const string &resultado, const string &esperado,
 		i++;
 	}
 
-	//Mala generaci√≥n en la tokenizaci√≥n de ficheros
+	//Mala generaciÛn en la tokenizaciÛn de ficheros
 	if(!res.eof())
 	{
-		cerr<<"El n√∫mero de ficheros resultado es mayor del esperado"<<endl;
+		cerr<<"El n˙mero de ficheros resultado es mayor del esperado"<<endl;
 		sinfallos=false;
 	}
 	else if(!esp.eof())
 	{
-		cerr<<"El n√∫mero de ficheros resultado es menor del esperado"<<endl;
+		cerr<<"El n˙mero de ficheros resultado es menor del esperado"<<endl;
 		sinfallos=false;
 	}
 
@@ -1072,11 +1072,11 @@ bool calcarEstructuraDirectorios(const string &origen, const string &destino)
 void borrarArchivosExtension(const string& directorio, const string& ext)
 {
 	//find prueba -follow -name \"*.tk" | xargs rm -rf
-	string cmd="find "+directorio+" -follow -name \"*."+ext+"\" | xargs rm -rf";
+	string cmd="find "+directorio+" -type f -follow -name \"*."+ext+"\" | xargs rm -rf";
 	system(cmd.c_str());
 }
 
-//Copiar los ficheros de una extension dentro de un directorio a otro directorio respectando la jerarqu√≠a de directorios interna
+//Copiar los ficheros de una extension dentro de un directorio a otro directorio respectando la jerarquÌa de directorios interna
 bool copiarArchivosExtension(const string& origen, const string&ext, const string&destino)
 {
 	//Comprobar si es un directorio
@@ -1087,7 +1087,7 @@ bool copiarArchivosExtension(const string& origen, const string&ext, const strin
 	}
 	else
 	{
-		//Copiar todos los ficheros que tengan la extensi√≥n de entrada dentro del directorio origen
+		//Copiar todos los ficheros que tengan la extensiÛn de entrada dentro del directorio origen
 		//rsync -rv --include '*/' --include '*.tk' --exclude '*' --prune-empty-dirs prueba/* salidaReal
 		string cmd =  "rsync -r --include '*/' --include '*."+ext+"' --exclude '*' --prune-empty-dirs "+origen+"/* "+destino;
 		system(cmd.c_str());
@@ -1123,7 +1123,7 @@ void limpiarDirectoriosTemporales(const string& directorioPruebas, const string&
 	if(borrarDirectorio(directorioComparaciones))
 		cout<<"Directorio "+directorioComparaciones<<" borrado"<<endl;
 	//Copiar estructura de directorio con la salida
-	if(calcarEstructuraDirectorios(directorioSalida,directorioComparaciones))
+	if(calcarEstructuraDirectorios(directorioPruebas,directorioComparaciones))
 		cout<<"Directorio "+directorioComparaciones+" regenerado"<<endl;
 	else
 		cerr<<"No se pudo regenerar el directorio "<<directorioComparaciones<<endl;
@@ -1134,7 +1134,7 @@ void limpiarDirectoriosTemporales(const string& directorioPruebas, const string&
 
 }
 
-//M√©todo para testear la tokenizaci√≥n de directorios
+//MÈtodo para testear la tokenizaciÛn de directorios
 bool testDirectorio(const Tokenizador &tok, const string& directorioPruebas,
 		const string& directorioSalida, long double &tiempoFinal)
 {
@@ -1145,7 +1145,7 @@ bool testDirectorio(const Tokenizador &tok, const string& directorioPruebas,
 		tiempoFinal = getcputime();
 	else
 	{
-		cerr<<"Hubo problemas graves en la tokenizaci√≥n del directorio"<<endl;
+		cerr<<"Hubo problemas graves en la tokenizaciÛn del directorio"<<endl;
 		sinerrores = false;
 		tiempoFinal = getcputime();
 	}
@@ -1153,7 +1153,7 @@ bool testDirectorio(const Tokenizador &tok, const string& directorioPruebas,
 	return sinerrores;
 }
 
-//Saber si un fichero est√° vac√≠o
+//Saber si un fichero est· vacÌo
 bool esFicheroVacio(const string &fichero)
 {
 	struct stat dat;
@@ -1171,7 +1171,7 @@ bool esFicheroVacio(const string &fichero)
 		return false;
 }
 
-//Escribir en el informe los ficheros que no est√©n vac√≠os
+//Escribir en el informe los ficheros que no estÈn vacÌos
 bool reportarNoVacios(const string &listado, const string &nomSalida)
 {
 	ifstream ficEntrada;
@@ -1184,11 +1184,11 @@ bool reportarNoVacios(const string &listado, const string &nomSalida)
 	if(ficEntrada.is_open())
 	{
 		ficSalida.open(nomSalida.c_str());
-		//Comprobar creaci√≥n del archivo de reporte
+		//Comprobar creaciÛn del archivo de reporte
 		if(ficSalida.is_open())
 		{
-			//A√±adir un t√≠tulo dentro del reporte
-			ficSalida<<"Listado de ficheros de diferencia que reportan errores de tokenizaci√≥n:";
+			//AÒadir un tÌtulo dentro del reporte
+			ficSalida<<"Listado de ficheros de diferencia que reportan errores de tokenizaciÛn:"<<endl;
 
 			//Recorrer el fichero mientras no se llegue al final
 			while(!ficEntrada.eof())
@@ -1196,12 +1196,12 @@ bool reportarNoVacios(const string &listado, const string &nomSalida)
 				string cadena="";
 				getline(ficEntrada,cadena);
 
-				//Comprobar que se ha le√≠do algo
+				//Comprobar que se ha leÌdo algo
 				if(cadena.length()!=0)
 				{
-					//A√±adir en el reporte los ficheros no vac√≠os
+					//AÒadir en el reporte los ficheros no vacÌos
 					if(!esFicheroVacio(cadena))
-						ficSalida<<endl<<cadena;
+						ficSalida<<cadena<<endl;
 				}
 			}
 		}
@@ -1239,7 +1239,7 @@ bool generarInforme(const string &directorio,const string& reporte)
 	return sinfallos;
 }
 
-//Probar la tokenizaci√≥n de directorios
+//Probar la tokenizaciÛn de directorios
 int runSuiteTemporal(const string& directorioPruebas, const string& directorioSalida, const string& directorioCopia)
 {
 	string directorioComparaciones =DIRECTORIO_DIFERENCIAS;
@@ -1247,11 +1247,11 @@ int runSuiteTemporal(const string& directorioPruebas, const string& directorioSa
 	//Limpiar temporales
 	limpiarDirectoriosTemporales(directorioPruebas,directorioSalida,directorioComparaciones,directorioCopia);
 
-	//Tokenizaci√≥n de directorio
+	//TokenizaciÛn de directorio
 	cout <<"------------------------------------------------"<<endl;
-	cout <<"Iniciando tokenizaci√≥n del directorio "+directorioPruebas<<endl;
+	cout <<"Iniciando tokenizaciÛn del directorio "+directorioPruebas<<endl;
 
-	//Medir el tiempo de tokenizaci√≥n
+	//Medir el tiempo de tokenizaciÛn
 	long double tiempo;
 	long double aa = getcputime();
 	//Declarar tokenizador
@@ -1263,28 +1263,28 @@ int runSuiteTemporal(const string& directorioPruebas, const string& directorioSa
 		//Mostrar resultado temporal
 		cout << "Ha tardado " << tiempo - aa << " segundos en tokenizar el directorio" << endl;
 
-		//Comprobar errores de comparaci√≥n
+		//Comprobar errores de comparaciÛn
 		if(compararSalidas(directorioPruebas,directorioSalida))
 		{
-			//Generar un fichero de resumen sobre las diferencias entre la salida esperada y la generada por la tokenizaci√≥n
+			//Generar un fichero de resumen sobre las diferencias entre la salida esperada y la generada por la tokenizaciÛn
 			string reporte =REPORTE_TOKEN;
 			if(generarInforme(directorioComparaciones,reporte))
 				cout<<"Informe de comparaciones generado en "<<reporte<<endl;
 		}
 		else
-			cerr<<"Hubo problemas en la comparaci√≥n de los ficheros generados"<<endl;
+			cerr<<"Hubo problemas en la comparaciÛn de los ficheros generados"<<endl;
 
-		//Hacer una copia de los ficheros .tk generados a otra carpeta para poder usarla como referencia en pr√≥ximas ejecuciones
+		//Hacer una copia de los ficheros .tk generados a otra carpeta para poder usarla como referencia en prÛximas ejecuciones
 		if(copiarArchivosExtension(directorioPruebas,EXTENSION_TOKEN,directorioCopia))
-			cout<<"Salida de la tokenizaci√≥n movida desde "<<directorioPruebas<<" hacia "<<directorioCopia<<endl;
+			cout<<"Salida de la tokenizaciÛn movida desde "<<directorioPruebas<<" hacia "<<directorioCopia<<endl;
 
 		//Limpiar ficheros temporales
 		limpiarFicherosTemporales();
 	}
-	//Errores de tokenizaci√≥n
+	//Errores de tokenizaciÛn
 	else
 	{
-		cerr<<"Se produjeron errores durante la tokenizaci√≥n del directorio"<<endl;
+		cerr<<"Se produjeron errores durante la tokenizaciÛn del directorio"<<endl;
 		return -1;
 	}
 
@@ -1294,36 +1294,36 @@ int runSuiteTemporal(const string& directorioPruebas, const string& directorioSa
 //Quitar caracter final
 void quitarCaracterFinal (string &cadena, const char &car)
 {
-	//Cadena vac√≠a
+	//Cadena vacÌa
 	if(!cadena.empty())
 	{
-		//Borrar caracter si es el introducido por par√°metro
+		//Borrar caracter si es el introducido por par·metro
 		string::size_type posFin = cadena.length()-1;
 		if(cadena[posFin] == car)
 			cadena.resize(posFin);
 	}
 }
 
-//Comprobar los argumentos recibidos como par√°metro
+//Comprobar los argumentos recibidos como par·metro
 bool comprobarArgumentos(const int &argc, char** argv,
 		string &directorioPruebas, string &directorioSalida,
 		string &directorioCopia)
 {
-	//Comprobaci√≥n de par√°metros
+	//ComprobaciÛn de par·metros
 	if(argc == 1)
 		return true;
-	//El n√∫mero de par√°metros debe ser impar (el primer par√°metro es el nombre del programa)
+	//El n˙mero de par·metros debe ser impar (el primer par·metro es el nombre del programa)
 	if(argc > 7 || argc%2==0)
 	{
-		cerr<<"ERROR: N√∫mero de par√°metros inv√°lido"<<endl;
+		cerr<<"ERROR: N˙mero de par·metros inv·lido"<<endl;
 		return false;
 	}
 
 	int i=1;
-	//Bucle de reconocimiento de par√°metros
+	//Bucle de reconocimiento de par·metros
 	while(i<argc)
 	{
-		//Opci√≥n
+		//OpciÛn
 		char * cad = argv[i];
 
 		//Directorio de entrada de las pruebas
@@ -1340,17 +1340,17 @@ bool comprobarArgumentos(const int &argc, char** argv,
 			directorioSalida =argv[i];
 			quitarCaracterFinal(directorioSalida,'/');
 		}
-		//Directorio donde copiar la salida de la tokenizaci√≥n
+		//Directorio donde copiar la salida de la tokenizaciÛn
 		else if(strcmp(cad,"-c")==0)
 		{
 			i++;
 			directorioCopia=argv[3];
 			quitarCaracterFinal(directorioCopia,'/');
 		}
-		//Par√°metro err√≥neo
+		//Par·metro errÛneo
 		else
 		{
-			cerr<<"ERROR: Par√°metro "<<cad<<" desconocido"<<endl;
+			cerr<<"ERROR: Par·metro "<<cad<<" desconocido"<<endl;
 			return false;
 		}
 
@@ -1360,25 +1360,25 @@ bool comprobarArgumentos(const int &argc, char** argv,
 }
 
 
-//M√©todo de prueba est√°ndar y con tiempo (Pasar el valgrind para el consumo de memoria)
+//MÈtodo de prueba est·ndar y con tiempo (Pasar el valgrind para el consumo de memoria)
 int main(int argc, char** argv)
 {
-	//Pruebas de tokenizaci√≥n individual
+	//Pruebas de tokenizaciÛn individual
     runSuite();
 
-    //Tokenizaci√≥n de directorios
+    //TokenizaciÛn de directorios
 	string directorioPruebas =DIRECTORIO_PRUEBAS;
 	string directorioSalida =DIRECTORIO_SALIDA;
 	string directorioCopia=DIRECTORIO_COPIA;
 
-	//Comprobaci√≥n de par√°metros
+	//ComprobaciÛn de par·metros
 	if(!comprobarArgumentos(argc,argv,directorioPruebas,directorioSalida,directorioCopia))
 	{
 		cout<<"USO: "<<argv[0]<<" [-e directorioEntrada] [-r directorioReferencia] [-c directorioCopia] "<<endl;
 		return -1;
 	}
 
-	//Lanzar la suite te tokenizaci√≥n de directorios
+	//Lanzar la suite te tokenizaciÛn de directorios
     runSuiteTemporal(directorioPruebas, directorioSalida, directorioCopia);
 
     return 0;
