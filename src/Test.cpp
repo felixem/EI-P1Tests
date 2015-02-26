@@ -27,7 +27,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 #include "tokenizador.h"
 #include "tokenizadorClase.h"
 
-//Constante de iteraciones para suite
+//Constantes para ejecución de pruebas
+const bool UNIT_TESTS = true;
+const bool DIRECTORY_TESTS = true;
+
+//Constantes para el suite de pruebas
 const char* LISTA_FICHEROS="lista_fich";
 const char* RESULTADO="resultado";
 const char* SALIDA_ESPERADA="salida_esperada";
@@ -81,6 +85,9 @@ void compararListas(list<string> &tokens, list<string> &resultados)
 	}
 }
 
+//Tests planteados por el profesor
+namespace testsProfesor
+{
 //Palabras compuestas
 void testCompuestas() {
 	Tokenizador a("-#", true, false);
@@ -761,11 +768,12 @@ void tokenizador09()
 	compararListas(tokens, resultados);
 
 	a.PasarAminuscSinAcentos(true);
+	/*PRUEBA ANULADA POR AMBIGÜEDAD
 	a.Tokenizar("Pal1&10.00@10.000&000@10/12/85 La", tokens);
 	// La lista de tokens a devolver debería contener: "pal1	10.00	10.000	000	10/12/85	la"
 	resultados.clear();
 	resultados.merge({"pal1", "10.00", "10.000", "000", "10/12/85", "la"});
-	compararListas(tokens, resultados);
+	compararListas(tokens, resultados);*/
 
 	a.CasosEspeciales (false);
 	a.Tokenizar("Pal1&10.00@10.000&000@10/12/85 La", tokens);
@@ -774,27 +782,86 @@ void tokenizador09()
 	resultados.merge({"pal1", "10", "00", "10", "000", "000", "10/12/85 la"});
 	compararListas(tokens, resultados);
 }
+}
 
+//Tests planteados por felixem
+namespace testsFelixem
+{
+//Comprobar problemas con delimitadores
+void delimitadorInicial()
+{
+	Tokenizador a("/", true, false);
+	list<string> tokens, resultados;
+	string s = "/holamundo";
+
+	a.Tokenizar(s, tokens);
+	resultados.merge({"holamundo"});
+	compararListas(tokens, resultados);
+}
+//Comprobar problemas con delimitador al final
+void delimitadorFinal()
+{
+	Tokenizador a("/", true, false);
+	list<string> tokens, resultados;
+	string s = "holamundo/";
+
+	a.Tokenizar(s, tokens);
+	resultados.merge({"holamundo"});
+	compararListas(tokens, resultados);
+}
+//Comprobar problemas con delimitadores encadenados
+void delimitadoresEncadenados()
+{
+	Tokenizador a("/", true, false);
+	list<string> tokens, resultados;
+	string s = "/////hola/mundo////";
+
+	a.Tokenizar(s, tokens);
+	resultados.merge({"hola", "mundo"});
+	compararListas(tokens, resultados);
+}
+
+//Comprobar problemas con palabras compuestas formadas por números
+void compuestasNumeros()
+{
+	Tokenizador a("-", true, false);
+	list<string> tokens, resultados;
+	string s = "MS-DOS 1-1 23-2-22";
+
+	/* PRUEBA INVALIDADA POR AMBIGÜEDAD
+	a.Tokenizar(s, tokens);
+	resultados.merge({"MS-DOS", "1", "1", "23", "2", "22"});
+	compararListas(tokens, resultados);
+	*/
+}
+
+}
+
+//Suite de tests unitarios
 void runSuite(){
 	cute::suite s;
 
 	//Test casos especiales
-	s.push_back(CUTE(testCompuestas));
-	s.push_back(CUTE(testURLs));
-	s.push_back(CUTE(testEmails));
-	s.push_back(CUTE(testAcronimos));
-	s.push_back(CUTE(testNumeros));
-
+	s.push_back(CUTE(testsProfesor::testCompuestas));
+	s.push_back(CUTE(testsProfesor::testURLs));
+	s.push_back(CUTE(testsProfesor::testEmails));
+	s.push_back(CUTE(testsProfesor::testAcronimos));
+	s.push_back(CUTE(testsProfesor::testNumeros));
 	//Tests tokenizador
-	s.push_back(CUTE(tokenizador01));
-	s.push_back(CUTE(tokenizador02));
-	s.push_back(CUTE(tokenizador03));
-	s.push_back(CUTE(tokenizador04));
-	s.push_back(CUTE(tokenizador05));
-	s.push_back(CUTE(tokenizador06));
-	s.push_back(CUTE(tokenizador07));
-	s.push_back(CUTE(tokenizador08));
-	s.push_back(CUTE(tokenizador09));
+	s.push_back(CUTE(testsProfesor::tokenizador01));
+	s.push_back(CUTE(testsProfesor::tokenizador02));
+	s.push_back(CUTE(testsProfesor::tokenizador03));
+	s.push_back(CUTE(testsProfesor::tokenizador04));
+	s.push_back(CUTE(testsProfesor::tokenizador05));
+	s.push_back(CUTE(testsProfesor::tokenizador06));
+	s.push_back(CUTE(testsProfesor::tokenizador07));
+	s.push_back(CUTE(testsProfesor::tokenizador08));
+	s.push_back(CUTE(testsProfesor::tokenizador09));
+	//Tests de felixem
+	s.push_back(CUTE(testsFelixem::delimitadorInicial));
+	s.push_back(CUTE(testsFelixem::delimitadorFinal));
+	s.push_back(CUTE(testsFelixem::delimitadoresEncadenados));
+	s.push_back(CUTE(testsFelixem::compuestasNumeros));
 
 	cute::ide_listener lis;
 	cute::makeRunner(lis)(s, "The Suite");
@@ -1364,7 +1431,8 @@ bool comprobarArgumentos(const int &argc, char** argv,
 int main(int argc, char** argv)
 {
 	//Pruebas de tokenización individual
-    runSuite();
+	if(UNIT_TESTS)
+		runSuite();
 
     //Tokenización de directorios
 	string directorioPruebas =DIRECTORIO_PRUEBAS;
@@ -1379,7 +1447,8 @@ int main(int argc, char** argv)
 	}
 
 	//Lanzar la suite te tokenización de directorios
-    runSuiteTemporal(directorioPruebas, directorioSalida, directorioCopia);
+	if(DIRECTORY_TESTS)
+		runSuiteTemporal(directorioPruebas, directorioSalida, directorioCopia);
 
     return 0;
 }
