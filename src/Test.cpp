@@ -37,7 +37,7 @@ const char* RESULTADO="resultado";
 const char* SALIDA_ESPERADA="salida_esperada";
 const char* REPORTE_TOKEN="reporte_tokenizacion";
 const char* DIRECTORIO_PRUEBAS ="entradas/prueba";
-const char* DIRECTORIO_SALIDA ="salidas/salida";
+const char* DIRECTORIO_SALIDA ="salidas/prueba";
 const char* DIRECTORIO_COPIA="salida_ejecucion";
 const char* DIRECTORIO_DIFERENCIAS="diferencias";
 const char* EXTENSION_TOKEN="tk";
@@ -974,13 +974,9 @@ bool borrarListaFicheros(const string &listaFic)
 
 	//Recorrer el fichero
 	string cadena;
-	while(!fic.eof())
+	while(getline(fic, cadena))
 	{
-		cadena="";
-		getline(fic, cadena);
-		//Borrar fichero
-		if(cadena.length()!=0)
-			borrarFichero(cadena);
+		borrarFichero(cadena);
 	}
 
 	fic.close();
@@ -1269,18 +1265,12 @@ bool reportarNoVacios(const string &listado, const string &nomSalida)
 			ficSalida<<"Listado de ficheros de diferencia que reportan errores de tokenización:"<<endl;
 
 			//Recorrer el fichero mientras no se llegue al final
-			while(!ficEntrada.eof())
+			string cadena;
+			while(getline(ficEntrada,cadena))
 			{
-				string cadena="";
-				getline(ficEntrada,cadena);
-
-				//Comprobar que se ha leído algo
-				if(cadena.length()!=0)
-				{
-					//Añadir en el reporte los ficheros no vacíos
-					if(!esFicheroVacio(cadena))
-						ficSalida<<cadena<<endl;
-				}
+				//Añadir en el reporte los ficheros no vacíos
+				if(!esFicheroVacio(cadena))
+					ficSalida<<cadena<<endl;
 			}
 		}
 		//Error en el fichero de salida
