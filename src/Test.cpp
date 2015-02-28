@@ -1262,7 +1262,7 @@ bool reportarNoVacios(const string &listado, const string &nomSalida)
 		if(ficSalida.is_open())
 		{
 			//Añadir un título dentro del reporte
-			ficSalida<<"Listado de ficheros de diferencia que reportan errores de tokenización:"<<endl;
+			ficSalida<<"Listado de ficheros de diferencia que reportan errores de tokenización:"<<"\n";
 
 			//Recorrer el fichero mientras no se llegue al final
 			string cadena;
@@ -1270,7 +1270,7 @@ bool reportarNoVacios(const string &listado, const string &nomSalida)
 			{
 				//Añadir en el reporte los ficheros no vacíos
 				if(!esFicheroVacio(cadena))
-					ficSalida<<cadena<<endl;
+					ficSalida<<cadena<<"\n";
 			}
 		}
 		//Error en el fichero de salida
