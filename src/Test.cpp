@@ -50,13 +50,13 @@ bool borrarListaFicheros(const string &listaFic);
 void MostrarResultados(list<string> &tokens, list<string> &resultados)
 {
 	cout <<"Resultado esperado:"<<endl;
-	for(list<string>::iterator it = resultados.begin(); it!=resultados.end(); it++)
+	for(list<string>::iterator it = resultados.begin(); it!=resultados.end(); ++it)
 	{
 		cout << (*it) << "\t";
 	}
 	cout <<endl;
 	cout <<"Resultado obtenido:"<<endl;
-	for(list<string>::iterator it = tokens.begin(); it!=tokens.end(); it++)
+	for(list<string>::iterator it = tokens.begin(); it!=tokens.end(); ++it)
 	{
 		cout << (*it) << "\t";
 	}
@@ -74,14 +74,14 @@ void compararListas(list<string> &tokens, list<string> &resultados)
 
 	//Igualdad de contenido
 	list<string>::iterator result = resultados.begin();
-	for(list<string>::iterator it = tokens.begin(); it!=tokens.end(); it++)
+	for(list<string>::iterator it = tokens.begin(); it!=tokens.end(); ++it)
 	{
 		//Mostrar errores
 		if((*result)!=(*it))
 			MostrarResultados(tokens,resultados);
 
 		ASSERT_EQUAL(*result, *it);
-		result++;
+		++result;
 	}
 }
 
@@ -835,6 +835,16 @@ void compuestasNumeros()
 	*/
 }
 
+//Comprobar los añadidos y borrados de los delimitadores
+void delimitadores()
+{
+	Tokenizador a("./-a");
+	ASSERT_EQUAL("./-a",a.DelimitadoresPalabra());
+
+	a.AnyadirDelimitadoresPalabra("./ %$");
+	ASSERT_EQUAL("./-a %$",a.DelimitadoresPalabra());
+}
+
 }
 
 //Suite de tests unitarios
@@ -862,6 +872,7 @@ void runSuite(){
 	s.push_back(CUTE(testsFelixem::delimitadorFinal));
 	s.push_back(CUTE(testsFelixem::delimitadoresEncadenados));
 	s.push_back(CUTE(testsFelixem::compuestasNumeros));
+	s.push_back(CUTE(testsFelixem::delimitadores));
 
 	cute::ide_listener lis;
 	cute::makeRunner(lis)(s, "The Suite");
@@ -1069,7 +1080,7 @@ bool compararListaFicheros(const string &resultado, const string &esperado,
 				compararFicheros(cadenaRes,cadenaEsp,dirSalida.str());
 			}
 		}
-		i++;
+		++i;
 	}
 
 	//Mala generación en la tokenización de ficheros
@@ -1396,21 +1407,21 @@ bool comprobarArgumentos(const int &argc, char** argv,
 		//Directorio de entrada de las pruebas
 		if(strcmp(cad,"-e")==0)
 		{
-			i++;
+			++i;
 			directorioPruebas =argv[i];
 			quitarCaracterFinal(directorioPruebas,'/');
 		}
 		//Directorio de referencia para las pruebas
 		else if(strcmp(cad,"-r")==0)
 		{
-			i++;
+			++i;
 			directorioSalida =argv[i];
 			quitarCaracterFinal(directorioSalida,'/');
 		}
 		//Directorio donde copiar la salida de la tokenización
 		else if(strcmp(cad,"-c")==0)
 		{
-			i++;
+			++i;
 			directorioCopia=argv[3];
 			quitarCaracterFinal(directorioCopia,'/');
 		}
@@ -1421,7 +1432,7 @@ bool comprobarArgumentos(const int &argc, char** argv,
 			return false;
 		}
 
-		i++;
+		++i;
 	}
 	return true;
 }
