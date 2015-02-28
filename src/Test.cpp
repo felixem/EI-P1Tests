@@ -845,6 +845,77 @@ void delimitadores()
 	ASSERT_EQUAL("./-a %$",a.DelimitadoresPalabra());
 }
 
+//Comprobaciones para los acrónimos
+void acronimos()
+{
+	Tokenizador a(".", true, false);
+	list<string> tokens, resultados;
+	string s = ".....hombres.....";
+
+	a.Tokenizar(s, tokens);
+	resultados.merge({"hombres"});
+	compararListas(tokens, resultados);
+
+	a.DelimitadoresPalabra("");
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({".....hombres....."});
+	compararListas(tokens, resultados);
+
+	a.DelimitadoresPalabra(".");
+	s = ".....h.o.m.b.r.e.s....";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({"h.o.m.b.r.e.s"});
+	compararListas(tokens, resultados);
+
+	/*Esta prueba es la más crítica. Me apoyo en la prueba del tokenizador08 del profesor
+	a.DelimitadoresPalabra("");
+	a.Tokenizar("U.S.A .U.S.A .p1 p1 e.g. p2. La", tokens);
+	La lista de tokens a devolver debería contener: "U.S.A, U.S.A, .p1, p1, e.g, p2., La"*/
+	a.DelimitadoresPalabra("");
+	s = ".....h.o.m.b.r.e.s....";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({"h.o.m.b.r.e.s"});
+	compararListas(tokens, resultados);
+}
+
+//Comprobaciones para las palabras compuestas
+void compuestas()
+{
+	list<string> tokens, resultados;
+	string s = "pal1 -MS-DOS p1 p2";
+
+	Tokenizador a("-#", true, false);
+	// La lista de tokens a devolver debería contener: "pal1, MS-DOS, p1, p2"
+	a.Tokenizar(s, tokens);
+	resultados.merge({"pal1", "MS-DOS", "p1", "p2"});
+	compararListas(tokens, resultados);
+
+	a.DelimitadoresPalabra("/ ");
+	// La lista de tokens a devolver debería contener: "pal1, -MS-DOS, p1, p2"
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({"pal1", "-MS-DOS", "p1", "p2"});
+	compararListas(tokens, resultados);
+
+	//Guion al principio o final sin ser delimitador
+	s = "--incluidos adolescentes y ancianos--";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({"--incluidos", "adolescentes", "y", "ancianos--"});
+	compararListas(tokens, resultados);
+
+	//Guion al principio o final siendo delimitador
+	s = "incluidos adolescentes y ancianos";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({"incluidos", "adolescentes", "y", "ancianos"});
+	compararListas(tokens, resultados);
+
+}
+
 }
 
 //Suite de tests unitarios
@@ -873,6 +944,8 @@ void runSuite(){
 	s.push_back(CUTE(testsFelixem::delimitadoresEncadenados));
 	s.push_back(CUTE(testsFelixem::compuestasNumeros));
 	s.push_back(CUTE(testsFelixem::delimitadores));
+	s.push_back(CUTE(testsFelixem::acronimos));
+	s.push_back(CUTE(testsFelixem::compuestas));
 
 	cute::ide_listener lis;
 	cute::makeRunner(lis)(s, "The Suite");
