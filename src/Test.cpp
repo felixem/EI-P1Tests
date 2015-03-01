@@ -916,6 +916,84 @@ void compuestas()
 
 }
 
+//Tests de numeros
+void numeros()
+{
+	list<string> tokens, resultados;
+	string s = "..................31¤";
+
+	Tokenizador a(".,", true, false);
+	a.Tokenizar(s, tokens);
+
+	//EL PUNTO O LA COMA SON DELIMITADORES
+	resultados.merge({"0.31", "¤"});
+	compararListas(tokens, resultados);
+
+	s=",,,,,,,,,,,,,,,,,,31$";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({"0,31", "$"});
+	compararListas(tokens, resultados);
+
+	s = "..................31....................";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({"0.31"});
+	compararListas(tokens, resultados);
+
+	s = ",,,,,,,,,,,,,,,,,,,,31,,,,,,,,,,,,,,,,,,,";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({"0,31"});
+	compararListas(tokens, resultados);
+
+	s = ",,,,,,,,,,,,,,,,,,,,31,,,,,,,,,,,,,,,,,,,";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({"0,31"});
+	compararListas(tokens, resultados);
+
+	s = ".......................3.876 mg";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({"0.3.876", "mg"});
+	compararListas(tokens, resultados);
+
+	//EL PUNTO Y LA COMA NO SON DELIMITADORES
+	a.DelimitadoresPalabra("");
+
+	s="..................31¤";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({"..................31¤"});
+	compararListas(tokens, resultados);
+
+	s=",,,,,,,,,,,,,,,,,,31$";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({",,,,,,,,,,,,,,,,,,31$"});
+	compararListas(tokens, resultados);
+
+	s = "..................31....................";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({"..................31...................."});
+	compararListas(tokens, resultados);
+
+	s = ",,,,,,,,,,,,,,,,,,,,31,,,,,,,,,,,,,,,,,,,";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({",,,,,,,,,,,,,,,,,,,,31,,,,,,,,,,,,,,,,,,,"});
+	compararListas(tokens, resultados);
+
+	s = ",,,,,,,,,,,,,,,,,,,,31,,,,,,,,,,,,,,,,,,,";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({",,,,,,,,,,,,,,,,,,,,31,,,,,,,,,,,,,,,,,,,"});
+	compararListas(tokens, resultados);
+
+}
+
 }
 
 //Suite de tests unitarios
@@ -946,6 +1024,7 @@ void runSuite(){
 	s.push_back(CUTE(testsFelixem::delimitadores));
 	s.push_back(CUTE(testsFelixem::acronimos));
 	s.push_back(CUTE(testsFelixem::compuestas));
+	s.push_back(CUTE(testsFelixem::numeros));
 
 	cute::ide_listener lis;
 	cute::makeRunner(lis)(s, "The Suite");
