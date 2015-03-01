@@ -909,10 +909,24 @@ void compuestas()
 	compararListas(tokens, resultados);
 
 	//Guion al principio o final siendo delimitador
-	s = "incluidos adolescentes y ancianos";
+	a.DelimitadoresPalabra("-");
 	a.Tokenizar(s, tokens);
 	resultados.clear();
 	resultados.merge({"incluidos", "adolescentes", "y", "ancianos"});
+	compararListas(tokens, resultados);
+
+	//Único guion al final
+	s="hidroxi-3-";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({"hidroxi-3"});
+	compararListas(tokens, resultados);
+
+	//Único guion al principio
+	s="-hidroxi-3-";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({"hidroxi-3"});
 	compararListas(tokens, resultados);
 
 }
