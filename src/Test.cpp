@@ -1000,6 +1000,27 @@ void numeros()
 	resultados.clear();
 	resultados.merge({"0,31"});
 	compararListas(tokens, resultados);
+
+}
+
+//Prueba para comprobar los números con símbolos que están al final aunque seguidos de puntos o comas
+void numeroSimbolosFinal()
+{
+	list<string> tokens, resultados;
+	Tokenizador a(".,", true, false);
+
+	//Comprobar que se truncan los puntos del final antes de analizar el símbolo
+	string s = "1,5%.......";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({"1,5", "%"});
+	compararListas(tokens, resultados);
+
+	s = "1.5ª,,,,,";
+	a.Tokenizar(s, tokens);
+	resultados.clear();
+	resultados.merge({"1.5", "ª"});
+	compararListas(tokens, resultados);
 }
 
 }
@@ -1033,6 +1054,7 @@ void runSuite(){
 	s.push_back(CUTE(testsFelixem::acronimos));
 	s.push_back(CUTE(testsFelixem::compuestas));
 	s.push_back(CUTE(testsFelixem::numeros));
+	s.push_back(CUTE(testsFelixem::numeroSimbolosFinal));
 
 	cute::ide_listener lis;
 	cute::makeRunner(lis)(s, "The Suite");
