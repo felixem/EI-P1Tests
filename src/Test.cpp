@@ -197,11 +197,12 @@ void testEmails()
 	resultados.merge({"pal1","iuii.ua.es", "p1", "p2"});
 	compararListas(tokens, resultados);
 
+	/* ELIMINADO POR POSIBLE AMBIGUEDAD DE QUE SE DETECTA PRIMERO ACRONIMO O EMAIL
 	a.Tokenizar("pal1 cat@iuii.ua.es@cd p1 p2", tokens);
 	// La lista de tokens a devolver debería contener: "pal1, cat, iuii.ua.es@cd, p1, p2"
 	resultados.clear();
 	resultados.merge({"pal1","cat", "iuii.ua.es@cd", "p1", "p2"});
-	compararListas(tokens, resultados);
+	compararListas(tokens, resultados);*/
 
 	a.DelimitadoresPalabra("&.");
 	a.Tokenizar("catedraTelefonicaUA@iuii.ua.es p1 p2", tokens);
@@ -965,33 +966,26 @@ void numeros()
 	s="..................31¤";
 	a.Tokenizar(s, tokens);
 	resultados.clear();
-	resultados.merge({"..................31¤"});
+	resultados.merge({"0.31", "¤"});
 	compararListas(tokens, resultados);
 
 	s=",,,,,,,,,,,,,,,,,,31$";
 	a.Tokenizar(s, tokens);
 	resultados.clear();
-	resultados.merge({",,,,,,,,,,,,,,,,,,31$"});
+	resultados.merge({"0,31", "$"});
 	compararListas(tokens, resultados);
 
 	s = "..................31....................";
 	a.Tokenizar(s, tokens);
 	resultados.clear();
-	resultados.merge({"..................31...................."});
+	resultados.merge({"0.31"});
 	compararListas(tokens, resultados);
 
 	s = ",,,,,,,,,,,,,,,,,,,,31,,,,,,,,,,,,,,,,,,,";
 	a.Tokenizar(s, tokens);
 	resultados.clear();
-	resultados.merge({",,,,,,,,,,,,,,,,,,,,31,,,,,,,,,,,,,,,,,,,"});
+	resultados.merge({"0,31"});
 	compararListas(tokens, resultados);
-
-	s = ",,,,,,,,,,,,,,,,,,,,31,,,,,,,,,,,,,,,,,,,";
-	a.Tokenizar(s, tokens);
-	resultados.clear();
-	resultados.merge({",,,,,,,,,,,,,,,,,,,,31,,,,,,,,,,,,,,,,,,,"});
-	compararListas(tokens, resultados);
-
 }
 
 }
